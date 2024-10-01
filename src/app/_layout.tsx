@@ -1,6 +1,12 @@
 import '@/styles/global.css';
 import "@/utils/dayjsLocaleConfig"
 
-import { Slot } from 'expo-router';
+import { Stack } from 'expo-router/stack';
 
-export default Slot;
+export default function Layout() {
+  return (
+    <Stack>
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+    </Stack>
+  );
+}

@@ -7,7 +7,7 @@ import {
 
 import { useFonts } from "expo-font";
 import { StatusBar } from "expo-status-bar";
-import Home from "./home";
+import Home from "../home";
 
 export default function Screen() {
   const [fontsLoaded] = useFonts({
@@ -21,7 +21,7 @@ export default function Screen() {
 
   return (
     <>
-      <StatusBar style="light" backgroundColor="transparent" translucent />
+      <StatusBar style="dark" backgroundColor="transparent" translucent />
       <Home />
     </>
   );
