@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Image, Text, Keyboard  } from 'react-native';
+import { View, Image, Text, Keyboard } from 'react-native';
 import dayjs from 'dayjs';
 import { MapPin, Calendar as IconCalendar, ArrowRight, Settings2, } from 'lucide-react-native';
 
@@ -15,7 +15,7 @@ import { useTrip } from './useTrip';
 export default function Home() {
   const [showModal, setShowModal] = useState(MODAL.NONE)
 
-  const { 
+  const {
     destination,
     isCreatingTrip,
     selectedDates,
@@ -25,7 +25,7 @@ export default function Home() {
     handleNextStepForm,
     handleSelectDate
   } = useTrip();
-  
+
   return (
     <View className="flex-1 items-center justify-center px-5 bg-yellow-100">
       <Image
@@ -46,7 +46,7 @@ export default function Home() {
 
       <View className="w-full bg-white p-4 rounded-xl my-8 border border-zinc-200">
         <Input>
-          <MapPin color={destination.length && stepForm === StepForm.TRIP_DETAILS ? colors.purple[900] : colors.zinc[400]} size={20} />
+          <MapPin color={destination?.length && stepForm === StepForm.TRIP_DETAILS ? colors.purple[900] : colors.zinc[400]} size={20} />
           <Input.Field
             placeholder="Para onde?"
             editable={stepForm === StepForm.TRIP_DETAILS}
@@ -56,7 +56,7 @@ export default function Home() {
         </Input>
 
         <Input>
-          <IconCalendar color={selectedDates.formatDatesInText.length && stepForm === StepForm.TRIP_DETAILS ? colors.purple[900] : colors.zinc[400]} size={20} />
+          <IconCalendar color={selectedDates?.formatDatesInText?.length && stepForm === StepForm.TRIP_DETAILS ? colors.purple[900] : colors.zinc[400]} size={20} />
           <Input.Field
             placeholder="Quando?"
             editable={stepForm === StepForm.TRIP_DETAILS}
@@ -69,16 +69,15 @@ export default function Home() {
           />
         </Input>
 
-        <View className='mt-4 gap-2'>
-          {stepForm === StepForm.TRIP_CONFIRMATION && (
-            <Button
-              variant="secondary"
-              onPress={() => setStepForm(StepForm.TRIP_DETAILS)}
-            >
-              <Button.Title>Alterar local/data</Button.Title>
-              <Settings2 color={colors.purple[900]} size={20} />
-            </Button>
-          )}
+        <View className='gap-2'>
+          <Button
+            variant="secondary"
+            onPress={() => setStepForm(StepForm.TRIP_DETAILS)}
+            className={stepForm === StepForm.TRIP_CONFIRMATION ? 'visible' : 'invisible'}
+          >
+            <Button.Title>Alterar local/data</Button.Title>
+            <Settings2 color={colors.purple[900]} size={20} />
+          </Button>
           <Button onPress={handleNextStepForm} isLoading={isCreatingTrip}>
             <Button.Title>
               {stepForm === StepForm.TRIP_DETAILS
