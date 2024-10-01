@@ -12,7 +12,7 @@ import { MODAL, StepForm } from '@/utils/constants';
 
 import { useTrip } from './useTrip';
 
-export default function Home() {
+export default function HomeScreen() {
   const [showModal, setShowModal] = useState(MODAL.NONE)
 
   const {
@@ -43,7 +43,6 @@ export default function Home() {
         Planeje sua próxima viagem
       </Text>
 
-
       <View className="w-full bg-white p-4 rounded-xl my-8 border border-zinc-200">
         <Input>
           <MapPin color={destination?.length && stepForm === StepForm.TRIP_DETAILS ? colors.purple[900] : colors.zinc[400]} size={20} />
@@ -69,15 +68,17 @@ export default function Home() {
           />
         </Input>
 
-        <View className='gap-2'>
-          <Button
-            variant="secondary"
-            onPress={() => setStepForm(StepForm.TRIP_DETAILS)}
-            className={stepForm === StepForm.TRIP_CONFIRMATION ? 'visible' : 'invisible'}
-          >
-            <Button.Title>Alterar local/data</Button.Title>
-            <Settings2 color={colors.purple[900]} size={20} />
-          </Button>
+        <View className='gap-2 mt-4'>
+          {stepForm === StepForm.TRIP_CONFIRMATION && (
+            <Button
+              variant="secondary"
+              onPress={() => setStepForm(StepForm.TRIP_DETAILS)}
+            >
+              <Button.Title>Alterar local/data</Button.Title>
+              <Settings2 color={colors.purple[900]} size={20} />
+            </Button>
+          )}
+
           <Button onPress={handleNextStepForm} isLoading={isCreatingTrip}>
             <Button.Title>
               {stepForm === StepForm.TRIP_DETAILS

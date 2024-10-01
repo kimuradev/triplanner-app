@@ -1,28 +1,7 @@
-import {
-  PlusJakartaSans_700Bold,
-  PlusJakartaSans_500Medium,
-  PlusJakartaSans_400Regular,
-  PlusJakartaSans_800ExtraBold
-} from "@expo-google-fonts/plus-jakarta-sans"
+import HomeScreen from "../home";
 
-import { useFonts } from "expo-font";
-import { StatusBar } from "expo-status-bar";
-import Home from "../home";
-
-export default function Screen() {
-  const [fontsLoaded] = useFonts({
-    PlusJakartaSans_700Bold,
-    PlusJakartaSans_500Medium,
-    PlusJakartaSans_400Regular,
-    PlusJakartaSans_800ExtraBold
-  })
-
-  if (!fontsLoaded) return null;
-
+export default function Tab() {
   return (
-    <>
-      <StatusBar style="dark" backgroundColor="transparent" translucent />
-      <Home />
-    </>
+      <HomeScreen />
   );
 }

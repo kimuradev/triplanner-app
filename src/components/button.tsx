@@ -1,5 +1,4 @@
 import { createContext, useContext } from "react"
-import { colors } from "@/styles/colors"
 
 import {
   Text,

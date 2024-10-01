@@ -1,9 +1,7 @@
-import { View, Text } from 'react-native';
+import TripListScreen from "../trip-list";
 
 export default function Tab() {
   return (
-    <View className='flex-1 items-center justify-center bg-yellow-100'>
-      <Text>Tab [Trip List]</Text>
-    </View>
+    <TripListScreen />
   );
 }

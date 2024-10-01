@@ -38,6 +38,7 @@ export const colors = {
     300: '#FCDD89',
     500: '#FED569',
     700: '#F5C84F',
+    900: '#F0B20B',
   },
   white: '#FFF',
   zinc: {
