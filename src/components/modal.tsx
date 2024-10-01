@@ -33,10 +33,10 @@ export function Modal({
         experimentalBlurMethod="dimezisBlurView"
       >
         <View className="flex-1 justify-end bg-black/60">
-          <View className="bg-zinc-900 border-t border-zinc-700 px-6 pt-5 pb-10">
+          <View className="bg-yellow-100 border-yellow300 rounded-3xl px-6 pt-5 pb-10">
             <ScrollView showsVerticalScrollIndicator={false}>
               <View className="flex-row justify-between items-center pt-5">
-                <Text className="text-white font-medium text-xl">{title}</Text>
+                <Text className="text-purple-900 font-medium text-xl">{title}</Text>
 
                 {onClose && (
                   <TouchableOpacity activeOpacity={0.7} onPress={onClose}>

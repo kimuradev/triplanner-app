@@ -31,8 +31,8 @@ function Button({
       className={clsx(
         "h-11 flex-row items-center justify-center rounded-lg gap-2 px-2",
         {
-          "bg-purple900" : variant === "primary",
-          "bg-gray700": variant === "secondary",
+          "bg-purple-900" : variant === "primary",
+          "bg-gray-700": variant === "secondary",
         },
         className
       )}
@@ -41,7 +41,7 @@ function Button({
       {...rest}
     >
       <ThemeContext.Provider value={{ variant }}>
-        {isLoading ? <ActivityIndicator className="text-purple900" /> : children}
+        {isLoading ? <ActivityIndicator className="text-purple-900" /> : children}
       </ThemeContext.Provider>
     </TouchableOpacity>
   )
@@ -54,7 +54,7 @@ function Title({ children }: TextProps) {
     <Text
       className={clsx("text-base font-semibold", {
         "text-white": variant === "primary",
-        "text-purple900": variant === "secondary",
+        "text-purple-900": variant === "secondary",
       })}
     >
       {children}

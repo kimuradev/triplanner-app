@@ -41,10 +41,12 @@ function Input({
   )
 }
 
-function Field({ ...rest }: TextInputProps) {
+function Field({ editable,  ...rest }: TextInputProps) {
+  const textColor = editable ? 'text-purple-900' : 'text-zinc-400'
+
   return (
     <TextInput
-      className="flex-1 text-purple900 text-lg font-regular"
+      className={`flex-1 mb-1 text-lg font-regular ${textColor}`}
       placeholderTextColor={colors.zinc[400]}
       cursorColor={colors.zinc[100]}
       selectionColor={Platform.OS === "ios" ? colors.zinc[100] : undefined}
