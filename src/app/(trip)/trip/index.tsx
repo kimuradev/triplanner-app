@@ -12,7 +12,7 @@ import { MODAL, StepForm } from '@/utils/constants';
 
 import { useTrip } from './useTrip';
 
-export default function HomeScreen() {
+export default function TripScreen() {
   const [showModal, setShowModal] = useState(MODAL.NONE)
 
   const {

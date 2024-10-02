@@ -5,9 +5,15 @@ import { colors } from "@/styles/colors";
 import { ProgressBar } from "./progress-bar";
 import PressableOpacity from "./pressable";
 
+type ActivityProps = {
+    completed: number,
+    total: number
+}
+
 type TripDataProps = {
     destination: string,
     scheduleDate: string,
+    activities: ActivityProps
 }
 
 type TripCardProps = {
@@ -17,6 +23,8 @@ type TripCardProps = {
 }
 
 export function TripCard({ data, progress, handlePress }: TripCardProps) {
+    const { destination, scheduleDate, activities } = data;
+
     return (
         <PressableOpacity
             onPress={handlePress}
@@ -25,12 +33,12 @@ export function TripCard({ data, progress, handlePress }: TripCardProps) {
             <View className='flex-row items-center justify-between'>
                 <View className='flex-row items-center gap-2'>
                     <MapPin size={20} color={colors.purple[900]} />
-                    <Text className='text-lg text-purple-900'>{data.destination}</Text>
+                    <Text className='text-lg text-purple-900'>{destination}</Text>
                 </View>
                 <View className='flex-row items-center gap-4'>
-                    <Text className='text-lg text-purple-900'>{data.scheduleDate}</Text>
+                    <Text className='text-lg text-purple-900'>{scheduleDate}</Text>
                     <View className='bg-yellow-900 rounded p-3'>
-                        <Text className='text-white font-bold shadow'>5/5</Text>
+                        <Text className='text-white font-bold shadow'>{activities.completed}/{activities.total}</Text>
                     </View>
                 </View>
             </View>

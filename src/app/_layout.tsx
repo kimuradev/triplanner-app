@@ -26,7 +26,7 @@ export default function Layout() {
             <StatusBar style="dark" backgroundColor="transparent" translucent />
             <Stack>
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen name="trip-details/[id]" options={{ title: 'Detalhes da viagem', headerBackTitle: 'Voltar'  }} />
+                <Stack.Screen name="(trip)/trip-details/[id]" options={{ title: 'Detalhes da viagem', headerBackTitle: 'Voltar'  }} />
             </Stack>
         </>
     );

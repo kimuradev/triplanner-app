@@ -1,7 +1,7 @@
-import HomeScreen from "../home";
+import TripScreen from "../(trip)/trip";
 
 export default function Tab() {
   return (
-      <HomeScreen />
+      <TripScreen />
   );
 }
