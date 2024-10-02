@@ -3,6 +3,7 @@ import { MapPin } from "lucide-react-native";
 
 import { colors } from "@/styles/colors";
 import { ProgressBar } from "./progress-bar";
+import PressableOpacity from "./pressable";
 
 type TripDataProps = {
     destination: string,
@@ -11,12 +12,14 @@ type TripDataProps = {
 
 type TripCardProps = {
     data: TripDataProps,
-    progress: number
+    progress: number,
+    handlePress: () => void
 }
 
-export function TripCard({ data, progress }: TripCardProps) {
+export function TripCard({ data, progress, handlePress }: TripCardProps) {
     return (
-        <View
+        <PressableOpacity
+            onPress={handlePress}
             className='bg-yellow-500 rounded-xl gap-2 p-4 shadow'
         >
             <View className='flex-row items-center justify-between'>
@@ -32,8 +35,8 @@ export function TripCard({ data, progress }: TripCardProps) {
                 </View>
             </View>
             <View className='w-full'>
-                <ProgressBar progress={progress}/>
+                <ProgressBar progress={progress} />
             </View>
-        </View>
+        </PressableOpacity>
     )
 }

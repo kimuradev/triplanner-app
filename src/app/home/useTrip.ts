@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { Alert } from "react-native"
+import { router } from "expo-router"
 import { DateData } from "react-native-calendars"
 
 import { StepForm } from "@/utils/constants"
@@ -35,6 +36,10 @@ export function useTrip() {
         }
 
         setStepForm(StepForm.TRIP_CONFIRMATION)
+
+        if (stepForm === StepForm.TRIP_CONFIRMATION) {
+            router.navigate('/trip-list')
+        }
     }
 
     const handleSelectDate = (selectedDay: DateData) => {
