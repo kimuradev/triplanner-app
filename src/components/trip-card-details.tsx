@@ -1,29 +1,25 @@
 import { Text, View } from "react-native";
-import { MapPin } from "lucide-react-native";
+import { MapPin, Settings2 } from "lucide-react-native";
 
 import { colors } from "@/styles/colors";
-import { ProgressBar } from "./progress-bar";
 import PressableOpacity from "./pressable";
 
-type ActivityProps = {
-    completed: number,
-    total: number
-}
-
-type TripDataProps = {
+type TripDataDetailsProps = {
     destination: string,
     scheduleDate: string,
-    activities: ActivityProps
 }
 
-type TripCardProps = {
-    data: TripDataProps,
-    progress: number,
+type TripCardDetailsProps = {
+    data: TripDataDetailsProps | undefined,
     handlePress: () => void
 }
 
-export function TripCard({ data, progress, handlePress }: TripCardProps) {
-    const { destination, scheduleDate, activities } = data;
+export function TripCardDetails({ data, handlePress }: TripCardDetailsProps) {
+    if (!data) {
+        return null
+    }
+
+    const { destination, scheduleDate } = data;
 
     return (
         <PressableOpacity
@@ -38,12 +34,9 @@ export function TripCard({ data, progress, handlePress }: TripCardProps) {
                 <View className='flex-row items-center gap-4'>
                     <Text className='text-lg text-purple-900'>{scheduleDate}</Text>
                     <View className='bg-yellow-700 rounded p-3'>
-                        <Text className='text-white font-bold'>{activities.completed}/{activities.total}</Text>
+                        <Settings2 color={colors.white} size={20} />
                     </View>
                 </View>
-            </View>
-            <View className='w-full'>
-                <ProgressBar progress={progress} />
             </View>
         </PressableOpacity>
     )

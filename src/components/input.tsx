@@ -26,10 +26,10 @@ function Input({
   return (
     <View
       className={clsx(
-        "min-h-16 max-h-16 flex-row items-center gap-2",
+        "min-h-16 max-h-16 flex-row items-center gap-2 bg-white px-4 rounded-xl ",
         {
-          "h-14 px-4 rounded-lg border border-zinc-800": variant !== "primary",
-          "bg-zinc-950": variant === "secondary",
+          "h-14 px-4 rounded-lg border border-zinc-200": variant !== "primary",
+          "bg-white border border-zinc-200": variant === "secondary",
           "bg-zinc-900": variant === "tertiary",
         },
         className
@@ -50,6 +50,7 @@ function Field({ editable,  ...rest }: TextInputProps) {
       placeholderTextColor={colors.zinc[400]}
       cursorColor={colors.zinc[100]}
       selectionColor={Platform.OS === "ios" ? colors.zinc[100] : undefined}
+      keyboardType="visible-password" // remove underline for android
       {...rest}
     />
   )

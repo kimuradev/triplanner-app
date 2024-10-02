@@ -48,7 +48,7 @@ function Field({ editable,  ...rest }: TextInputProps) {
       placeholderTextColor={colors.zinc[400]}
       cursorColor={colors.zinc[100]}
       selectionColor={Platform.OS === "ios" ? colors.zinc[100] : undefined}
-      keyboardType="visible-password"
+      keyboardType="visible-password" // remove underline for android
       {...rest}
     />
   )

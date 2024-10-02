@@ -43,7 +43,7 @@ export default function TripScreen() {
         Planeje sua próxima viagem
       </Text>
 
-      <View className="w-full bg-white p-4 rounded-xl my-8 border border-zinc-200">
+      <View className="w-full bg-white p-4 rounded-xl my-8 border border-zinc-200 gap-2">
         <Input>
           <MapPin color={destination?.length && stepForm === StepForm.TRIP_DETAILS ? colors.purple[900] : colors.zinc[400]} size={20} />
           <Input.Field
