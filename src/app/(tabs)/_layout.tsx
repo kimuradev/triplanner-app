@@ -1,6 +1,8 @@
-import { colors } from '@/styles/colors';
+import { Platform } from 'react-native';
 import { Tabs } from 'expo-router';
 import { Plane, TicketsPlane } from 'lucide-react-native'
+
+import { colors } from '@/styles/colors';
 
 export default function TabLayout() {
     return (
@@ -8,7 +10,7 @@ export default function TabLayout() {
             screenOptions={{
                 tabBarActiveTintColor: colors.purple[900],
                 tabBarStyle: {
-                    height: 80,
+                    height: Platform.OS === "ios" ? 100 : 80,
                 },
                 tabBarActiveBackgroundColor: colors.zinc[100],
                 headerShown: false,
