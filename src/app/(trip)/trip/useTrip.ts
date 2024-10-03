@@ -6,7 +6,14 @@ import { DateData } from "react-native-calendars"
 import { StepForm } from "@/utils/constants"
 import { calendarUtils, DatesSelected } from "@/utils/calendarUtils"
 
+import { useSQLiteContext } from "expo-sqlite"
+import { drizzle } from "drizzle-orm/expo-sqlite"
+import * as tripSchema from '@/db/schemas/schema'
+
 export function useTrip() {
+    const database = useSQLiteContext()
+    const db = drizzle(database, { schema: tripSchema })
+
     const [isCreatingTrip, setIsCreatingTrip] = useState(false)
     const [stepForm, setStepForm] = useState(StepForm.TRIP_DETAILS)
     const [selectedDates, setSelectedDates] = useState({} as DatesSelected)
@@ -38,7 +45,7 @@ export function useTrip() {
         setStepForm(StepForm.TRIP_CONFIRMATION)
 
         if (stepForm === StepForm.TRIP_CONFIRMATION) {
-            router.navigate('/trip-list')
+            handleAddTrip()
         }
     }
 
@@ -50,6 +57,38 @@ export function useTrip() {
         })
 
         setSelectedDates(dates)
+    }
+
+    const formatTimestampToDate = (timestamp: number | undefined) => {
+
+        if (!timestamp) return new Date();
+
+        const date = new Date(timestamp);
+
+        // Convert to ISO format (with Z)
+        // return date.toISOString();
+        return date
+    }
+
+    const handleAddTrip = async () => {
+        setIsCreatingTrip(true)
+
+        try {
+            const response = await db.insert(tripSchema.trip).values({
+                destination,
+                endsAt: formatTimestampToDate(selectedDates.endsAt?.timestamp), 
+                startsAt: formatTimestampToDate(selectedDates.startsAt?.timestamp),
+            })
+
+            Alert.alert("Destino adicionado com sucesso!" + response.lastInsertRowId)
+
+            router.navigate('/trip-list')
+            
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setIsCreatingTrip(false)
+        }
     }
 
     return {

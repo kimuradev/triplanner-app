@@ -14,7 +14,7 @@ import { useTrip } from './useTrip';
 
 export default function TripScreen() {
   const [showModal, setShowModal] = useState(MODAL.NONE)
-
+  
   const {
     destination,
     isCreatingTrip,

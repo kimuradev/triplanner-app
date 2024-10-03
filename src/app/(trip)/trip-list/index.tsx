@@ -6,11 +6,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors } from '@/styles/colors';
 import { Search } from '@/components/search';
 import { TripCard } from '@/components/trip-card';
+
 import { useTripList } from './useTripList';
 
 export default function TripListScreen() {
     const {
-        filteredTrips,
+        data,
         searchDestination,
         calculateProgress,
         handleDestination
@@ -27,8 +28,8 @@ export default function TripListScreen() {
                 />
             </Search>
 
-            {filteredTrips.length > 0 ? (
-                filteredTrips.map(item => (
+            {data.length > 0 ? (
+                data.map((item: any) => (
                     <TripCard
                         key={item.id}
                         data={{ destination: item.destination, scheduleDate: item.scheduleDate, activities: item.activities }}
