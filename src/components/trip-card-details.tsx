@@ -2,15 +2,12 @@ import { Text, View } from "react-native";
 import { MapPin, Settings2 } from "lucide-react-native";
 
 import { colors } from "@/styles/colors";
+import { TripDataProps } from "@/app/(trip)/definition";
+
 import PressableOpacity from "./pressable";
 
-type TripDataDetailsProps = {
-    destination: string,
-    scheduleDate: string,
-}
-
 type TripCardDetailsProps = {
-    data: TripDataDetailsProps | undefined,
+    data: TripDataProps,
     handlePress: () => void
 }
 

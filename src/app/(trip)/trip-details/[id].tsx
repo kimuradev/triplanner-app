@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Alert, Keyboard, Text, TouchableOpacity, View } from 'react-native';
 import dayjs from 'dayjs';
 import { DateData } from 'react-native-calendars';
@@ -14,6 +14,10 @@ import { TripCardDetails } from '@/components/trip-card-details';
 import { calendarUtils, DatesSelected } from '@/utils/calendarUtils';
 import { colors } from '@/styles/colors';
 import { Activities } from './activities';
+import { useDatabase } from "@/db/useDatabase"
+import * as tripSchema from '@/db/schemas/schema'
+import { eq } from 'drizzle-orm';
+import { TripDataProps } from '../definition';
 
 
 enum MODAL {
@@ -24,6 +28,12 @@ enum MODAL {
 }
 
 export default function TripListScreen() {
+    // const { trip } = useTripContext();
+    const [data, setData] = useState<TripDataProps>({
+        destination: '',
+        scheduleDate: ''
+    })
+    const { db } = useDatabase<typeof tripSchema>({ schema: tripSchema })
     const [isUpdatingTrip, setIsUpdatingTrip] = useState(false)
     const [showModal, setShowModal] = useState(MODAL.NONE)
     const [destination, setDestination] = useState("")
@@ -33,7 +43,31 @@ export default function TripListScreen() {
         id: string
     }>()
 
-    const filteredTrip = data.find(item => item.id === parseInt(tripParams.id))
+    async function getTripById({ id }: { id: string }) {
+        try {
+            const response = await db.query.trip.findFirst({
+                with: {
+                    activities: true
+                },
+                where: eq(tripSchema.trip.id, parseInt(id))
+            })
+
+            console.log('response: ', response)
+
+            // if (response) {
+            //     setData(response)
+            // }
+
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    useEffect(() => {
+        getTripById({ id: tripParams.id })
+    }, [tripParams.id])
+
+    // const selectedTrip = data.find(item => item.id === parseInt(tripParams.id))
 
     function handleSelectDate(selectedDay: DateData) {
         const dates = calendarUtils.orderStartsAtAndEndsAt({
@@ -45,31 +79,33 @@ export default function TripListScreen() {
         setSelectedDates(dates)
     }
 
-    async function handleUpdateTrip() {}
+    async function handleUpdateTrip() { }
 
     async function handleRemoveTrip() {
         try {
             Alert.alert("Remover viagem", "Tem certeza que deseja remover a viagem", [
-              {
-                text: "Não",
-                style: "cancel",
-              },
-              {
-                text: "Sim",
-                onPress: async () => {
-                //   await tripStorage.remove()
-                  router.navigate("/")
+                {
+                    text: "Não",
+                    style: "cancel",
                 },
-              },
+                {
+                    text: "Sim",
+                    onPress: async () => {
+                        //   await tripStorage.remove()
+                        router.navigate("/")
+                    },
+                },
             ])
-          } catch (error) {
+        } catch (error) {
             console.log(error)
-          }
+        }
     }
+
+    console.log('data: ', data)
 
     return (
         <View className='flex-1 bg-yellow-100 p-4'>
-            <TripCardDetails data={filteredTrip} handlePress={() => setShowModal(MODAL.UPDATE_TRIP)} />
+            <TripCardDetails data={data} handlePress={() => setShowModal(MODAL.UPDATE_TRIP)} />
 
             <Modal
                 title="Atualizar viagem"
@@ -79,7 +115,7 @@ export default function TripListScreen() {
             >
                 <View className="gap-2 my-4">
                     <Input variant="secondary">
-                        <MapPin color={destination?.length ? colors.purple[900] : colors.zinc[400]}  size={20} />
+                        <MapPin color={destination?.length ? colors.purple[900] : colors.zinc[400]} size={20} />
                         <Input.Field
                             placeholder="Para onde?"
                             onChangeText={setDestination}
@@ -89,7 +125,7 @@ export default function TripListScreen() {
                     </Input>
 
                     <Input variant="secondary">
-                        <IconCalendar color={selectedDates.formatDatesInText?.length ? colors.purple[900] : colors.zinc[400]}  size={20} />
+                        <IconCalendar color={selectedDates.formatDatesInText?.length ? colors.purple[900] : colors.zinc[400]} size={20} />
 
                         <Input.Field
                             placeholder="Quando?"
@@ -129,7 +165,7 @@ export default function TripListScreen() {
                 </View>
             </Modal>
 
-            <Activities tripDetails={filteredTrip} />
+            {/* <Activities tripDetails={filteredTrip} /> */}
         </View>
     );
 }

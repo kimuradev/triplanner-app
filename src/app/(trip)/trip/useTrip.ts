@@ -6,13 +6,11 @@ import { DateData } from "react-native-calendars"
 import { StepForm } from "@/utils/constants"
 import { calendarUtils, DatesSelected } from "@/utils/calendarUtils"
 
-import { useSQLiteContext } from "expo-sqlite"
-import { drizzle } from "drizzle-orm/expo-sqlite"
 import * as tripSchema from '@/db/schemas/schema'
+import { useDatabase } from "@/db/useDatabase"
 
 export function useTrip() {
-    const database = useSQLiteContext()
-    const db = drizzle(database, { schema: tripSchema })
+    const { db } = useDatabase({ schema: tripSchema})
 
     const [isCreatingTrip, setIsCreatingTrip] = useState(false)
     const [stepForm, setStepForm] = useState(StepForm.TRIP_DETAILS)
@@ -74,13 +72,13 @@ export function useTrip() {
         setIsCreatingTrip(true)
 
         try {
-            const response = await db.insert(tripSchema.trip).values({
+            await db.insert(tripSchema.trip).values({
                 destination,
                 endsAt: formatTimestampToDate(selectedDates.endsAt?.timestamp), 
                 startsAt: formatTimestampToDate(selectedDates.startsAt?.timestamp),
             })
 
-            Alert.alert("Destino adicionado com sucesso!" + response.lastInsertRowId)
+            Alert.alert("Destino adicionado com sucesso.")
 
             router.navigate('/trip-list')
             

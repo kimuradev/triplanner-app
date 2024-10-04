@@ -1,17 +1,22 @@
 import { createContext, useContext, useState } from "react";
 
+import { type TripDataProps } from "@/app/(trip)/definition";
+
 type TripContextProps = {
-     data: {}; 
-     setData: React.Dispatch<React.SetStateAction<{}>>; 
+     trip: TripDataProps ; 
+     setTrip: React.Dispatch<React.SetStateAction<TripDataProps>>; 
 }
 
 const TripContext = createContext<TripContextProps | null>(null)
 
 export const TripContextProvider = ({ children }: { children: React.ReactNode}) => {
-    const [data, setData] = useState({});
+    const [trip, setTrip] = useState<TripDataProps>({
+        destination: '', 
+        scheduleDate: ''
+    })
 
     return (
-        <TripContext.Provider value={{ data , setData }}>
+        <TripContext.Provider value={{ trip , setTrip }}>
             {children}
         </TripContext.Provider>
     )
