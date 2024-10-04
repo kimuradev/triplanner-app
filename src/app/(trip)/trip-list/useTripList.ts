@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import dayjs from "dayjs";
 
 import { asc, eq, like } from "drizzle-orm"
 import { useSQLiteContext } from "expo-sqlite"
 import { drizzle } from "drizzle-orm/expo-sqlite"
 import * as tripSchema from '@/db/schemas/schema'
 import { useIsFocused } from '@react-navigation/native';
+import { calendarUtils } from "@/utils/calendarUtils";
 
 export function useTripList() {
     const database = useSQLiteContext()
@@ -19,11 +21,21 @@ export function useTripList() {
         try {
             const response = await db.query.trip.findMany({
                 with: {
-                    activities: true  // Include the related `activities` for each trip
-                }
+                    activities: true
+                },
+                where: like(tripSchema.trip.destination, `%${searchDestination}%`),
+                orderBy: [asc(tripSchema.trip.createdAt)],
             })
 
-            setData(response)
+            const updatedResponse = response.map(item => ({
+                ...item,
+                scheduleDate: calendarUtils.formatDatesInText({
+                    startsAt: dayjs(item.startsAt),
+                    endsAt: dayjs(item.endsAt)
+                })
+            }))
+
+            setData(updatedResponse)
         } catch (error) {
             console.log(error)
         }
@@ -31,7 +43,7 @@ export function useTripList() {
 
     useEffect(() => {
         fetchTrips()
-    }, [isFocused])
+    }, [isFocused, searchDestination])
 
     const handleDestination = (text: string) => {
         setSearchDestination(text);
