@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Alert, Keyboard, Text, TouchableOpacity, View } from 'react-native';
 import dayjs from 'dayjs';
+import { eq } from 'drizzle-orm';
 import { DateData } from 'react-native-calendars';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Calendar as IconCalendar, MapPin } from 'lucide-react-native';
@@ -16,19 +17,17 @@ import { colors } from '@/styles/colors';
 import { Activities } from './activities';
 import { useDatabase } from "@/db/useDatabase"
 import * as tripSchema from '@/db/schemas/schema'
-import { eq } from 'drizzle-orm';
-import { TripDataProps } from '../definition';
 
+import { TripDataProps } from '../definition';
+import { formatTimestampToDate } from '@/utils/dateTimeUtils';
 
 enum MODAL {
     NONE = 0,
     UPDATE_TRIP = 1,
     CALENDAR = 2,
-    // CONFIRM_ATTENDANCE = 3,
 }
 
 export default function TripListScreen() {
-    // const { trip } = useTripContext();
     const [data, setData] = useState<TripDataProps>({
         destination: '',
         scheduleDate: ''
@@ -36,6 +35,7 @@ export default function TripListScreen() {
     const { db } = useDatabase<typeof tripSchema>({ schema: tripSchema })
     const [isUpdatingTrip, setIsUpdatingTrip] = useState(false)
     const [showModal, setShowModal] = useState(MODAL.NONE)
+
     const [destination, setDestination] = useState("")
     const [selectedDates, setSelectedDates] = useState({} as DatesSelected)
 
@@ -52,22 +52,86 @@ export default function TripListScreen() {
                 where: eq(tripSchema.trip.id, parseInt(id))
             })
 
-            console.log('response: ', response)
-
-            // if (response) {
-            //     setData(response)
-            // }
+            if (response) {
+                setData(response)
+                setDestination(response.destination)
+            }
 
         } catch (error) {
             console.error(error)
         }
     }
 
+    async function handleUpdateTrip({ id }: { id: number }) {
+        try {
+            if (!tripParams.id) {
+                return
+            }
+
+            if (!destination || !selectedDates.startsAt || !selectedDates.endsAt) {
+                return Alert.alert(
+                    "Atualizar viagem",
+                    "Lembre-se de, além de preencher o destino, selecione data de início e fim da viagem."
+                )
+            }
+
+            setIsUpdatingTrip(true)
+
+            await db
+                .update(tripSchema.trip)
+                .set({
+                    destination: destination,
+                    startsAt: formatTimestampToDate(selectedDates.startsAt?.timestamp),
+                    endsAt: formatTimestampToDate(selectedDates.endsAt.timestamp),
+                    scheduleDate: calendarUtils.formatDatesInText({
+                        startsAt: dayjs(formatTimestampToDate(selectedDates.startsAt?.timestamp)).tz(),
+                        endsAt: dayjs(formatTimestampToDate(selectedDates.endsAt.timestamp)).tz()
+                    })
+                })
+                .where(eq(tripSchema.trip.id, parseInt(tripParams.id)));
+
+            Alert.alert("Atualizar viagem", "Viagem atualizada com sucesso!", [
+                {
+                    text: "OK",
+                    onPress: () => {
+                        setShowModal(MODAL.NONE)
+                        getTripById({ id: tripParams.id })
+                    },
+                },
+            ])
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setIsUpdatingTrip(false)
+        }
+    }
+
+    async function handleRemoveTrip({ id }: { id: number }) {
+        try {
+            Alert.alert("Remover viagem", "Tem certeza que deseja remover a viagem", [
+                {
+                    text: "Não",
+                    style: "cancel",
+                },
+                {
+                    text: "Sim",
+                    onPress: async () => {
+                        await db
+                            .delete(tripSchema.trip)
+                            .where(eq(tripSchema.trip.id, id))
+
+                        router.navigate('/')
+                    },
+                },
+            ])
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     useEffect(() => {
         getTripById({ id: tripParams.id })
     }, [tripParams.id])
-
-    // const selectedTrip = data.find(item => item.id === parseInt(tripParams.id))
 
     function handleSelectDate(selectedDay: DateData) {
         const dates = calendarUtils.orderStartsAtAndEndsAt({
@@ -79,29 +143,6 @@ export default function TripListScreen() {
         setSelectedDates(dates)
     }
 
-    async function handleUpdateTrip() { }
-
-    async function handleRemoveTrip() {
-        try {
-            Alert.alert("Remover viagem", "Tem certeza que deseja remover a viagem", [
-                {
-                    text: "Não",
-                    style: "cancel",
-                },
-                {
-                    text: "Sim",
-                    onPress: async () => {
-                        //   await tripStorage.remove()
-                        router.navigate("/")
-                    },
-                },
-            ])
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    console.log('data: ', data)
 
     return (
         <View className='flex-1 bg-yellow-100 p-4'>
@@ -137,11 +178,11 @@ export default function TripListScreen() {
                     </Input>
                 </View>
 
-                <Button onPress={handleUpdateTrip} isLoading={isUpdatingTrip}>
+                <Button onPress={() => handleUpdateTrip({ id: parseInt(tripParams.id) })} isLoading={isUpdatingTrip}>
                     <Button.Title>Atualizar</Button.Title>
                 </Button>
 
-                <TouchableOpacity activeOpacity={0.8} onPress={handleRemoveTrip}>
+                <TouchableOpacity activeOpacity={0.8} onPress={() => handleRemoveTrip({ id: parseInt(tripParams.id) })}>
                     <Text className="text-red-400 text-center mt-6">Remover viagem</Text>
                 </TouchableOpacity>
             </Modal>

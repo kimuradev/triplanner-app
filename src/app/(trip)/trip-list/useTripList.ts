@@ -1,17 +1,11 @@
 import { useEffect, useState } from "react";
-import dayjs from "dayjs";
 
-import { asc, eq, like } from "drizzle-orm"
-import { useSQLiteContext } from "expo-sqlite"
+import { asc, like } from "drizzle-orm"
 import { useDatabase } from "@/db/useDatabase"
-import { drizzle } from "drizzle-orm/expo-sqlite"
 import * as tripSchema from '@/db/schemas/schema'
 import { useIsFocused } from '@react-navigation/native';
-import { calendarUtils } from "@/utils/calendarUtils";
-import { useTripContext } from "@/context/trip-context";
 
 export function useTripList() {
-    // const { setTrip } = useTripContext();
     const { db } = useDatabase<typeof tripSchema>({ schema: tripSchema })
 
     const [data, setData] = useState<any>([])
@@ -29,16 +23,7 @@ export function useTripList() {
                 orderBy: [asc(tripSchema.trip.createdAt)],
             })
 
-            const updatedResponse: any = response.map(item => ({
-                ...item,
-                scheduleDate: calendarUtils.formatDatesInText({
-                    startsAt: dayjs(item.startsAt),
-                    endsAt: dayjs(item.endsAt)
-                })
-            }))
-
-            setData(updatedResponse)
-            // setTrip({ destination: updatedResponse.destination, scheduleDate: updatedResponse.scheduleDate })
+            setData(response)
         } catch (error) {
             console.log(error)
         }

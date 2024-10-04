@@ -9,7 +9,7 @@ import { Input } from "@/components/input";
 import { Modal } from "@/components/modal";
 import { Button } from "@/components/button";
 import { Calendar } from "@/components/calendar";
-import { formatHour } from "@/utils/hourUtils";
+import { formatHour } from "@/utils/dateTimeUtils";
 import { Activity } from "@/components/activity";
 import PressableOpacity from "@/components/pressable";
 

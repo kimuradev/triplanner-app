@@ -8,6 +8,7 @@ export const trip = sqliteTable("trips", {
     destination: text("destination").notNull(),
     startsAt: integer('starts_at', { mode: 'timestamp' }).notNull(),
     endsAt: integer('ends_at', { mode: 'timestamp' }).notNull(),
+    scheduleDate: text("scheduleDate").notNull(),
     isConfirmed: integer('isConfirmed', { mode: 'boolean' }).notNull().default(false),
     createdAt: integer('createdAt', { mode: 'timestamp' }).notNull().default(sql`(current_timestamp)`)
 });

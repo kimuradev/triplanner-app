@@ -2,12 +2,14 @@ import { useState } from "react"
 import { Alert } from "react-native"
 import { router } from "expo-router"
 import { DateData } from "react-native-calendars"
+import dayjs from "dayjs"
 
 import { StepForm } from "@/utils/constants"
 import { calendarUtils, DatesSelected } from "@/utils/calendarUtils"
 
 import * as tripSchema from '@/db/schemas/schema'
 import { useDatabase } from "@/db/useDatabase"
+import { formatTimestampToDate } from "@/utils/dateTimeUtils"
 
 export function useTrip() {
     const { db } = useDatabase({ schema: tripSchema})
@@ -57,28 +59,25 @@ export function useTrip() {
         setSelectedDates(dates)
     }
 
-    const formatTimestampToDate = (timestamp: number | undefined) => {
-
-        if (!timestamp) return new Date();
-
-        const date = new Date(timestamp);
-
-        // Convert to ISO format (with Z)
-        // return date.toISOString();
-        return date
-    }
-
     const handleAddTrip = async () => {
         setIsCreatingTrip(true)
 
         try {
             await db.insert(tripSchema.trip).values({
                 destination,
-                endsAt: formatTimestampToDate(selectedDates.endsAt?.timestamp), 
                 startsAt: formatTimestampToDate(selectedDates.startsAt?.timestamp),
+                endsAt: formatTimestampToDate(selectedDates.endsAt?.timestamp), 
+                scheduleDate: calendarUtils.formatDatesInText({
+                    startsAt: dayjs(formatTimestampToDate(selectedDates.startsAt?.timestamp)).tz(),
+                    endsAt: dayjs(formatTimestampToDate(selectedDates.endsAt?.timestamp)).tz()
+                })
             })
 
             Alert.alert("Destino adicionado com sucesso.")
+
+            setDestination('')
+            setSelectedDates({} as DatesSelected)
+            setStepForm(StepForm.TRIP_DETAILS)
 
             router.navigate('/trip-list')
             

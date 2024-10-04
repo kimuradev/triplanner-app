@@ -7,13 +7,15 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "drizzle:generate": "npx drizzle-kit generate"
+    "drizzle:generate": "npx drizzle-kit generate",
+    "drizzle:migrate": "npx drizzle-kit migrate"
   },
   "dependencies": {
     "@expo-google-fonts/plus-jakarta-sans": "^0.2.3",
     "babel-plugin-inline-import": "^3.0.0",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
+    "dayjs-plugin-utc": "^0.1.2",
     "drizzle-orm": "^0.33.0",
     "expo": "~51.0.28",
     "expo-blur": "^13.0.2",
