@@ -1,4 +1,4 @@
-import { Text } from 'react-native';
+import { FlatList, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { Search as SearchIcon } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -18,28 +18,35 @@ export default function TripListScreen() {
     } = useTripList();
 
     return (
-        <SafeAreaView style={{ backgroundColor: colors.yellow[100], flex: 1, padding: 16, gap: 16 }}>
-            <Search>
-                <SearchIcon color={colors.zinc[400]} size={20} />
-                <Search.Field
-                    placeholder="Pesquisar por cidade ou país..."
-                    onChangeText={handleDestination}
-                    value={searchDestination}
-                />
-            </Search>
-
-            {data.length > 0 ? (
-                data.map((item: any) => (
-                    <TripCard
-                        key={item.id}
-                        data={{ destination: item.destination, scheduleDate: item.scheduleDate, activities: item.activities }}
-                        progress={calculateProgress(item.activities)}
-                        handlePress={() => router.navigate(`/trip-details/${item.id}`)}
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFCE4', paddingHorizontal: 16 }} edges={['right', 'left', 'top']} >
+            <View className='mb-4'>
+                <Search>
+                    <SearchIcon color={colors.zinc[400]} size={20} />
+                    <Search.Field
+                        placeholder="Pesquisar por cidade ou país..."
+                        onChangeText={handleDestination}
+                        value={searchDestination}
                     />
-                ))
-            ) : (
-                <Text className='text-center mt-5 text-purple-900 text-lg'>Nenhum destino encontrado.</Text>
-            )}
+                </Search>
+            </View>
+            <View className='flex-1'>
+                {data.length > 0 ? (
+                    <FlatList
+                        className='p-0 m-0'
+                        data={data}
+                        keyExtractor={(item) => item.id}
+                        renderItem={({ item }) => <TripCard
+                            key={item.id}
+                            data={{ destination: item.destination, scheduleDate: item.scheduleDate, activities: item.activities }}
+                            progress={calculateProgress(item.activities)}
+                            handlePress={() => router.navigate(`/trip-details/${item.id}`)}
+                        />}
+                        contentContainerClassName="gap-4"
+                    />
+                ) : (
+                    <Text className='text-center mt-5 text-purple-900 text-lg'>Nenhum destino encontrado.</Text>
+                )}
+            </View>
         </SafeAreaView>
     );
 }
