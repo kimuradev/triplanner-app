@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Keyboard, SectionList, Text, View } from "react-native";
+import { Alert, Keyboard, SectionList, Text, View } from "react-native";
 
 import dayjs from "dayjs";
 import { eq } from "drizzle-orm";
@@ -134,7 +134,38 @@ export function Activities({ tripDetails }: { tripDetails: TripDataProps }) {
         getTripActivities()
     }, [tripDetails.id])
 
-    const handleCreateTripActivity = () => { }
+    const handleCreateTripActivity = async () => {
+        try {
+            const { title, date, hour } = activity
+            if (!title || !date || !hour) {
+                return Alert.alert("Cadastrar atividade", "Preencha todos os campos!")
+            }
+
+            setIsCreatingActivity(true)
+
+            if (tripDetails.id) {
+                const [hours, minutes] = hour.split(':').map(Number);
+
+                // Use dayjs to set the date and add hours and minutes
+                const occursAt = dayjs(date).hour(hours).minute(minutes).second(0).millisecond(0);
+
+                await db.insert(tripSchema.activity).values({
+                    tripId: tripDetails.id,
+                    occursAt: dayjs(occursAt.toISOString()).toDate(),
+                    title: title,
+                })
+            }
+
+            Alert.alert("Nova Atividade", "Nova atividade cadastrada com sucesso!")
+
+            await getTripActivities()
+            resetNewActivityFields()
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setIsCreatingActivity(false)
+        }
+    }
 
     const handleNewActivity = () => {
         setShowModal(MODAL.NEW_ACTIVITY)
@@ -332,8 +363,8 @@ export function Activities({ tripDetails }: { tripDetails: TripDataProps }) {
                         }))}
                         markedDates={{ [activity.date]: { selected: true } }}
                         initialDate={tripDetails?.startsAt?.toString()}
-                        minDate={tripDetails?.startsAt?.toString()}
-                        maxDate={tripDetails?.endsAt?.toString()}
+                        minDate={dayjs(tripDetails.startsAt).tz().format('YYYY-MM-DD')}
+                        maxDate={dayjs(tripDetails.endsAt).tz().format('YYYY-MM-DD')}
                     />
 
                     <Button onPress={() => stepForm === StepForm.NEW_ACTIVITY ? setShowModal(MODAL.NEW_ACTIVITY) : setShowModal(MODAL.UPDATE_ACTIVITY)}>
