@@ -7,12 +7,12 @@ import dayjs from "dayjs"
 import { StepForm } from "@/utils/constants"
 import { calendarUtils, DatesSelected } from "@/utils/calendarUtils"
 
-import * as tripSchema from '@/db/schemas/schema'
 import { useDatabase } from "@/db/useDatabase"
+import * as tripSchema from '@/db/schemas/schema'
 import { formatTimestampToDate } from "@/utils/dateTimeUtils"
 
 export function useTrip() {
-    const { db } = useDatabase({ schema: tripSchema})
+    const { db } = useDatabase({ schema: tripSchema })
 
     const [isCreatingTrip, setIsCreatingTrip] = useState(false)
     const [stepForm, setStepForm] = useState(StepForm.TRIP_DETAILS)
@@ -59,6 +59,7 @@ export function useTrip() {
         setSelectedDates(dates)
     }
 
+
     const handleAddTrip = async () => {
         setIsCreatingTrip(true)
 
@@ -66,7 +67,7 @@ export function useTrip() {
             await db.insert(tripSchema.trip).values({
                 destination,
                 startsAt: formatTimestampToDate(selectedDates.startsAt?.timestamp),
-                endsAt: formatTimestampToDate(selectedDates.endsAt?.timestamp), 
+                endsAt: formatTimestampToDate(selectedDates.endsAt?.timestamp),
                 scheduleDate: calendarUtils.formatDatesInText({
                     startsAt: dayjs(formatTimestampToDate(selectedDates.startsAt?.timestamp)).tz(),
                     endsAt: dayjs(formatTimestampToDate(selectedDates.endsAt?.timestamp)).tz()
@@ -80,7 +81,7 @@ export function useTrip() {
             setStepForm(StepForm.TRIP_DETAILS)
 
             router.navigate('/trip-list')
-            
+
         } catch (error) {
             console.log(error)
         } finally {

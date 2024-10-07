@@ -6,7 +6,6 @@ import { DateData } from 'react-native-calendars';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Calendar as IconCalendar, MapPin } from 'lucide-react-native';
 
-import { data } from '@/utils/data';
 import { Input } from '@/components/input';
 import { Modal } from '@/components/modal';
 import { Calendar } from '@/components/calendar';
@@ -17,9 +16,9 @@ import { colors } from '@/styles/colors';
 import { Activities } from './activities';
 import { useDatabase } from "@/db/useDatabase"
 import * as tripSchema from '@/db/schemas/schema'
+import { formatTimestampToDate } from '@/utils/dateTimeUtils';
 
 import { TripDataProps } from '../definition';
-import { formatTimestampToDate } from '@/utils/dateTimeUtils';
 
 enum MODAL {
     NONE = 0,
@@ -143,7 +142,6 @@ export default function TripListScreen() {
         setSelectedDates(dates)
     }
 
-
     return (
         <View className='flex-1 bg-yellow-100 p-4'>
             <TripCardDetails data={data} handlePress={() => setShowModal(MODAL.UPDATE_TRIP)} />
@@ -206,7 +204,7 @@ export default function TripListScreen() {
                 </View>
             </Modal>
 
-            {/* <Activities tripDetails={filteredTrip} /> */}
+            <Activities tripDetails={data}/>
         </View>
     );
 }

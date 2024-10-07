@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Keyboard, SectionList, Text, View } from "react-native";
 
 import dayjs from "dayjs";
+import { eq } from "drizzle-orm";
 import { Clock, Calendar as IconCalendar, PlusIcon, Tag } from "lucide-react-native";
 
 import { colors } from "@/styles/colors";
@@ -12,13 +13,16 @@ import { Calendar } from "@/components/calendar";
 import { formatHour } from "@/utils/dateTimeUtils";
 import { Activity } from "@/components/activity";
 import PressableOpacity from "@/components/pressable";
+import { useDatabase } from "@/db/useDatabase";
+import * as tripSchema from '@/db/schemas/schema'
+import { TripDataProps } from "../definition";
 
 export type ActivityProps = {
     id: string
     title: string
     hour: string
     isBefore: boolean
-    date: string
+    date?: string
 }
 
 type TripActivities = {
@@ -41,91 +45,22 @@ export enum StepForm {
     UPDATE_ACTIVITY = 2,
 }
 
-export function Activities({ tripDetails }: any) {
+export function Activities({ tripDetails }: { tripDetails: TripDataProps }) {
+    const { db } = useDatabase<typeof tripSchema>({ schema: tripSchema })
+
     const [showModal, setShowModal] = useState(MODAL.NONE)
     const [stepForm, setStepForm] = useState(StepForm.NEW_ACTIVITY)
 
     const [isCreatingActivity, setIsCreatingActivity] = useState(false)
+    const [isLoadingActivities, setIsLoadingActivities] = useState(true)
 
     const [activity, setActivity] = useState({ title: '', hour: '', date: '' })
+    const [tripActivities, setTripActivities] = useState<TripActivities[]>([])
 
     function resetNewActivityFields() {
         setActivity({ title: '', hour: '', date: '' })
         setShowModal(MODAL.NONE)
     }
-
-    // LISTS
-    const [tripActivities, setTripActivities] = useState<TripActivities[]>(
-        [
-            {
-                "data": [
-                    {
-                        "date": "2024-10-08",
-                        "hour": "12:00h",
-                        "id": "1",
-                        "isBefore": true,
-                        "title": "Corrida"
-                    }
-                ],
-                "title": {
-                    "dayName": "quinta",
-                    "dayNumber": 3
-                }
-            },
-            {
-                "data": [
-                    {
-                        "date": "2024-10-09",
-                        "hour": "15:00h",
-                        "id": "2",
-                        "isBefore": false,
-                        "title": "Almoco"
-                    },
-                    {
-                        "date": "2024-10-09",
-                        "hour": "19:00h",
-                        "id": "3",
-                        "isBefore": false,
-                        "title": "Janta"
-                    }
-                ],
-                "title": {
-                    "dayName": "sexta",
-                    "dayNumber": 4
-                }
-            },
-            {
-                "data": [
-                    {
-                        "date": "2024-10-10",
-                        "hour": "09:00h",
-                        "id": "4",
-                        "isBefore": false,
-                        "title": "Passeio"
-                    }
-                ],
-                "title": {
-                    "dayName": "sábado",
-                    "dayNumber": 5
-                }
-            },
-            {
-                "data": [],
-                "title": {
-                    "dayName": "domingo",
-                    "dayNumber": 6
-                }
-            },
-            {
-                "data": [],
-                "title": {
-                    "dayName": "segunda",
-                    "dayNumber": 7
-                }
-            }
-        ]
-    )
-
 
     const handleHourChange = (text: string) => {
         const formattedHour = formatHour(text);
@@ -134,6 +69,70 @@ export function Activities({ tripDetails }: any) {
             hour: formattedHour
         }))
     };
+
+    const getActivitiesByTripId = async ({ id }: { id: number | undefined }) => {
+        if (!id) return [];
+
+        const trip = await db.query.trip.findFirst({
+            where: eq(tripSchema.trip.id, id),
+            with: {
+                activities: true
+            },
+        });
+
+        if (!trip) {
+            throw new Error('Trip not found.')
+        }
+
+        const differenceInDaysBetweenTripStartAndEnd = dayjs(trip.endsAt).diff(
+            trip.startsAt,
+            'days',
+        )
+
+        const activities = Array.from({
+            length: differenceInDaysBetweenTripStartAndEnd + 1,
+        }).map((_, daysToAdd) => {
+            const dateToCompare = dayjs(trip.startsAt).add(daysToAdd, 'days')
+
+            return {
+                date: dateToCompare.toDate(),
+                activities: trip.activities.filter((activity) => {
+                    return dayjs(activity.occursAt).isSame(dateToCompare, 'day')
+                }),
+            }
+        })
+
+        return activities;
+    }
+
+    async function getTripActivities() {
+        try {
+            const activities = await getActivitiesByTripId({ id: tripDetails.id })
+
+            const activitiesToSectionList: any = activities.map((dayActivity) => ({
+                title: {
+                    dayNumber: dayjs(dayActivity.date).tz().date(),
+                    dayName: dayjs(dayActivity.date).tz().format("dddd").replace("-feira", ""),
+                },
+                data: dayActivity.activities.map((activity) => ({
+                    id: activity.id,
+                    title: activity.title,
+                    hour: dayjs(activity.occursAt).tz().format("hh[:]mm[h]"),
+                    isBefore: dayjs(activity.occursAt).tz().isBefore(dayjs()),
+                })),
+            }));
+
+            setTripActivities(activitiesToSectionList)
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setIsLoadingActivities(false)
+        }
+    }
+
+    useEffect(() => {
+        getTripActivities()
+    }, [tripDetails.id])
 
     const handleCreateTripActivity = () => { }
 
@@ -154,7 +153,7 @@ export function Activities({ tripDetails }: any) {
         if (filteredTripActivities[0].data) {
             const { title, hour, date } = filteredTripActivities[0].data[0];
 
-            setActivity({ title, hour, date })
+            setActivity({ title: title ?? '', hour: hour ?? '', date: date ?? '' })
         }
     }
 
@@ -332,9 +331,9 @@ export function Activities({ tripDetails }: any) {
                             date: day.dateString
                         }))}
                         markedDates={{ [activity.date]: { selected: true } }}
-                        initialDate={tripDetails.starts_at.toString()}
-                        minDate={tripDetails.starts_at.toString()}
-                        maxDate={tripDetails.ends_at.toString()}
+                        initialDate={tripDetails?.startsAt?.toString()}
+                        minDate={tripDetails?.startsAt?.toString()}
+                        maxDate={tripDetails?.endsAt?.toString()}
                     />
 
                     <Button onPress={() => stepForm === StepForm.NEW_ACTIVITY ? setShowModal(MODAL.NEW_ACTIVITY) : setShowModal(MODAL.UPDATE_ACTIVITY)}>
