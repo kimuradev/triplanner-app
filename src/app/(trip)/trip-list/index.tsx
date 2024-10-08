@@ -38,7 +38,7 @@ export default function TripListScreen() {
                         renderItem={({ item }) => <TripCard
                             key={item.id}
                             data={{ destination: item.destination, scheduleDate: item.scheduleDate, activities: item.activities }}
-                            progress={calculateProgress(item.activities)}
+                            progress={calculateProgress({ activities: item.activities })}
                             handlePress={() => router.navigate(`/trip-details/${item.id}`)}
                         />}
                         contentContainerClassName="gap-4"

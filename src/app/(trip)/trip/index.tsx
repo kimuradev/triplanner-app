@@ -8,12 +8,12 @@ import { Input } from '@/components/input';
 import { Modal } from '@/components/modal';
 import { Button } from "@/components/button"
 import { Calendar } from '@/components/calendar';
-import { MODAL, StepForm } from '@/utils/constants';
+import { TripModal, StepForm } from './constants';
 
 import { useTrip } from './useTrip';
 
 export default function TripScreen() {
-  const [showModal, setShowModal] = useState(MODAL.NONE)
+  const [showModal, setShowModal] = useState(TripModal.NONE)
   
   const {
     destination,
@@ -62,7 +62,7 @@ export default function TripScreen() {
             onFocus={() => Keyboard.dismiss()}
             showSoftInputOnFocus={false}
             onPressIn={() =>
-              stepForm === StepForm.TRIP_DETAILS && setShowModal(MODAL.CALENDAR)
+              stepForm === StepForm.TRIP_DETAILS && setShowModal(TripModal.CALENDAR)
             }
             value={selectedDates.formatDatesInText}
           />
@@ -93,8 +93,8 @@ export default function TripScreen() {
       <Modal
         title="Selecionar datas"
         subtitle="Selecione a data de ida e volta da viagem"
-        visible={showModal === MODAL.CALENDAR}
-        onClose={() => setShowModal(MODAL.NONE)}
+        visible={showModal === TripModal.CALENDAR}
+        onClose={() => setShowModal(TripModal.NONE)}
       >
         <View className="gap-4 mt-4">
           <Calendar
@@ -103,7 +103,7 @@ export default function TripScreen() {
             markedDates={selectedDates.dates}
           />
 
-          <Button onPress={() => setShowModal(MODAL.NONE)}>
+          <Button onPress={() => setShowModal(TripModal.NONE)}>
             <Button.Title>Confirmar</Button.Title>
           </Button>
         </View>

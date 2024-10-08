@@ -1,4 +1,4 @@
-import { Keyboard, SectionList, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Keyboard, SectionList, Text, TouchableOpacity, View } from "react-native";
 
 import dayjs from "dayjs";
 import { Clock, Calendar as IconCalendar, PlusIcon, Tag } from "lucide-react-native";
@@ -12,8 +12,7 @@ import { Activity } from "@/components/activity";
 import PressableOpacity from "@/components/pressable";
 
 import { useActivity } from "./useActivity";
-import { TripDataProps } from "../../definition";
-import { ActivityModal, StepForm } from "../constants";
+import { ActivityModal, StepForm, TripDataProps } from "../constants";
 
 export function Activities({ tripDetails }: { tripDetails: TripDataProps }) {
     const {
@@ -22,7 +21,6 @@ export function Activities({ tripDetails }: { tripDetails: TripDataProps }) {
         showModal,
         tripActivities,
         isCreatingActivity,
-        isLoadingActivities,
         setActivity,
         setShowModal,
         handleHourChange,
@@ -33,6 +31,7 @@ export function Activities({ tripDetails }: { tripDetails: TripDataProps }) {
         handleCreateTripActivity,
         handleUpdateActivityModal,
     } = useActivity({ tripId: tripDetails.id || 0 })
+
 
     return (
         <View className="flex-1">

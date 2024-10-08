@@ -10,8 +10,7 @@ import * as tripSchema from '@/db/schemas/schema'
 import { formatTimestampToDate } from '@/utils/dateTimeUtils';
 import { calendarUtils, DatesSelected } from '@/utils/calendarUtils';
 
-import { TripDataProps } from '../definition';
-import { TripDetailsModal } from './constants';
+import { TripDataProps, TripDetailsModal } from './constants';
 
 export function useTripDetails({ tripId }: { tripId: string }) {
     const [data, setData] = useState<TripDataProps>({

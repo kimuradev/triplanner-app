@@ -4,6 +4,7 @@ import { Alert } from "react-native";
 import dayjs from "dayjs";
 import { eq } from "drizzle-orm";
 
+import { TIME_ZONE } from "@/utils/constants";
 import { useDatabase } from "@/db/useDatabase";
 import * as tripSchema from '@/db/schemas/schema'
 import { formatHour } from "@/utils/dateTimeUtils";
@@ -16,7 +17,6 @@ export function useActivity({ tripId }: { tripId: number }) {
     const [stepForm, setStepForm] = useState(StepForm.NEW_ACTIVITY)
 
     const [isCreatingActivity, setIsCreatingActivity] = useState(false)
-    const [isLoadingActivities, setIsLoadingActivities] = useState(true)
 
     const [activity, setActivity] = useState({ id: '', title: '', hour: '', date: '' })
     const [tripActivities, setTripActivities] = useState<TripActivitiesProps[]>([])
@@ -77,12 +77,12 @@ export function useActivity({ tripId }: { tripId: number }) {
         const activities = Array.from({
             length: differenceInDaysBetweenTripStartAndEnd + 1,
         }).map((_, daysToAdd) => {
-            const dateToCompare = dayjs(trip.startsAt).add(daysToAdd, 'days').utc(); // Use UTC here
+            const dateToCompare = dayjs(trip.startsAt).add(daysToAdd, 'days').utc();
 
             return {
                 date: dateToCompare.toDate(),
                 activities: trip.activities.filter((activity) => {
-                    return dayjs.utc(activity.occursAt).isSame(dateToCompare, 'day'); // Use UTC here too
+                    return dayjs.utc(activity.occursAt).isSame(dateToCompare, 'day');
                 }),
             };
         });
@@ -103,16 +103,14 @@ export function useActivity({ tripId }: { tripId: number }) {
                     id: activity.id,
                     title: activity.title,
                     hour: dayjs(activity.occursAt).tz().format("HH[:]mm"),
-                    isBefore: dayjs(activity.occursAt).tz().isBefore(dayjs().clone().tz('America/Sao_Paulo', true)),
+                    isBefore: dayjs(activity.occursAt).tz().isBefore(dayjs().clone().tz(TIME_ZONE, true)),
                 })),
             }));
 
             setTripActivities(activitiesToSectionList)
         } catch (error) {
             console.log(error)
-        } finally {
-            setIsLoadingActivities(false)
-        }
+        } 
     }
 
     async function handleCreateTripActivity() {
@@ -213,7 +211,6 @@ export function useActivity({ tripId }: { tripId: number }) {
         showModal,
         tripActivities,
         isCreatingActivity,
-        isLoadingActivities,
         setActivity,
         setShowModal,
         handleHourChange,

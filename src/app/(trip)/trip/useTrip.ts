@@ -4,7 +4,7 @@ import { router } from "expo-router"
 import { DateData } from "react-native-calendars"
 import dayjs from "dayjs"
 
-import { StepForm } from "@/utils/constants"
+import { StepForm } from "./constants"
 import { calendarUtils, DatesSelected } from "@/utils/calendarUtils"
 
 import { useDatabase } from "@/db/useDatabase"
