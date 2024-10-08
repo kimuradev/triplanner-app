@@ -99,11 +99,11 @@ export function useActivity({ tripId }: { tripId: number }) {
                     dayNumber: dayjs(dayActivity.date).tz().date(),
                     dayName: dayjs(dayActivity.date).tz().format("dddd").replace("-feira", ""),
                 },
-                data: dayActivity.activities.map((activity) => ({
+                data: dayActivity.activities.sort((a, b) => dayjs(a.occursAt).tz().diff(dayjs(b.occursAt).tz())).map((activity) => ({
                     id: activity.id,
                     title: activity.title,
-                    hour: dayjs(activity.occursAt).tz().format("hh[:]mm[h]"),
-                    isBefore: dayjs(activity.occursAt).tz().isBefore(dayjs()),
+                    hour: dayjs(activity.occursAt).tz().format("HH[:]mm"),
+                    isBefore: dayjs(activity.occursAt).tz().isBefore(dayjs().clone().tz('America/Sao_Paulo', true)),
                 })),
             }));
 
