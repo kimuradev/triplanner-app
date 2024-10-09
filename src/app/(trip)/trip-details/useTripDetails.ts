@@ -74,9 +74,9 @@ export function useTripDetails({ tripId }: { tripId: string }) {
             Alert.alert("Atualizar viagem", "Viagem atualizada com sucesso!", [
                 {
                     text: "OK",
-                    onPress: () => {
+                    onPress: async () => {
                         setShowModal(TripDetailsModal.NONE)
-                        getTripById({ id: tripId })
+                        await getTripById({ id: tripId })
                     },
                 },
             ])

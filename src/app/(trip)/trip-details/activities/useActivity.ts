@@ -8,9 +8,9 @@ import { TIME_ZONE } from "@/utils/constants";
 import { useDatabase } from "@/db/useDatabase";
 import * as tripSchema from '@/db/schemas/schema'
 import { formatHour } from "@/utils/dateTimeUtils";
-import { ActivityModal, StepForm, TripActivitiesProps } from "../constants";
+import { ActivityModal, StepForm, TripActivitiesProps, TripDataProps } from "../constants";
 
-export function useActivity({ tripId }: { tripId: number }) {
+export function useActivity({ tripDetails }: { tripDetails: TripDataProps }) {
     const { db } = useDatabase<typeof tripSchema>({ schema: tripSchema })
 
     const [showModal, setShowModal] = useState(ActivityModal.NONE)
@@ -92,7 +92,7 @@ export function useActivity({ tripId }: { tripId: number }) {
 
     async function getTripActivities() {
         try {
-            const activities = await getActivitiesByTripId({ id: tripId })
+            const activities = await getActivitiesByTripId({ id: tripDetails.id })
 
             const activitiesToSectionList: any = activities.map((dayActivity) => ({
                 title: {
@@ -122,13 +122,13 @@ export function useActivity({ tripId }: { tripId: number }) {
 
             setIsCreatingActivity(true)
 
-            if (tripId) {
+            if (tripDetails.id) {
                 const [hours, minutes] = hour.split(':').map(Number);
 
                 const occursAt = dayjs(date).tz().hour(hours).minute(minutes).second(0).millisecond(0)
 
                 await db.insert(tripSchema.activity).values({
-                    tripId: tripId,
+                    tripId: tripDetails.id,
                     occursAt: dayjs(occursAt.toISOString()).toDate(),
                     title: title,
                 })
@@ -154,7 +154,7 @@ export function useActivity({ tripId }: { tripId: number }) {
 
             setIsCreatingActivity(true)
 
-            if (tripId) {
+            if (tripDetails.id) {
                 const [hours, minutes] = hour.replace('h','').split(':').map(Number);
 
                 const occursAt = dayjs(date).tz().hour(hours).minute(minutes).second(0).millisecond(0)
@@ -202,7 +202,7 @@ export function useActivity({ tripId }: { tripId: number }) {
 
     useEffect(() => {
         getTripActivities()
-    }, [tripId])
+    }, [tripDetails.id, tripDetails.scheduleDate])
 
 
     return {

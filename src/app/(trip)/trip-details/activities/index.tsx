@@ -1,4 +1,4 @@
-import { ActivityIndicator, Keyboard, SectionList, Text, TouchableOpacity, View } from "react-native";
+import { Keyboard, SectionList, Text, TouchableOpacity, View } from "react-native";
 
 import dayjs from "dayjs";
 import { Clock, Calendar as IconCalendar, PlusIcon, Tag } from "lucide-react-native";
@@ -30,7 +30,7 @@ export function Activities({ tripDetails }: { tripDetails: TripDataProps }) {
         resetNewActivityFields,
         handleCreateTripActivity,
         handleUpdateActivityModal,
-    } = useActivity({ tripId: tripDetails.id || 0 })
+    } = useActivity({ tripDetails })
 
 
     return (

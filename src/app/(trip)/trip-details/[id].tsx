@@ -36,6 +36,8 @@ export default function TripListScreen() {
         <View className='flex-1 bg-yellow-100 p-4'>
             <TripCardDetails data={data} handlePress={() => setShowModal(TripDetailsModal.UPDATE_TRIP)} />
 
+            <Activities tripDetails={data} />
+
             <Modal
                 title="Atualizar viagem"
                 subtitle="Somente quem criou a viagem pode editar."
@@ -93,8 +95,7 @@ export default function TripListScreen() {
                     </Button>
                 </View>
             </Modal>
-
-            <Activities tripDetails={data} />
+            
         </View>
     );
 }
