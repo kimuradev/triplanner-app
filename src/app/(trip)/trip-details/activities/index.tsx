@@ -75,7 +75,7 @@ export function Activities({ tripDetails }: { tripDetails: TripDataProps }) {
             <Modal
                 visible={showModal === ActivityModal.NEW_ACTIVITY}
                 title="Cadastrar atividade"
-                subtitle="Todos os convidados podem visualizar as atividades"
+                subtitle="As atividades serão automaticamente concluídas após o horário."
                 onClose={resetNewActivityFields}
             >
                 <View className="mt-4 mb-3">
@@ -136,7 +136,7 @@ export function Activities({ tripDetails }: { tripDetails: TripDataProps }) {
             <Modal
                 visible={showModal === ActivityModal.UPDATE_ACTIVITY}
                 title="Atualizar atividade"
-                subtitle="Todos os convidados podem visualizar as atividades"
+                subtitle="As atividades serão automaticamente concluídas após o horário."
                 onClose={resetNewActivityFields}
             >
                 <View className="mt-4 mb-3">

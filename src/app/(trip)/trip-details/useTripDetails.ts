@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Alert} from 'react-native';
+import { Alert } from 'react-native';
 import dayjs from 'dayjs';
 import { eq } from 'drizzle-orm';
 import { router } from 'expo-router';
@@ -28,7 +28,7 @@ export function useTripDetails({ tripId }: { tripId: string }) {
         try {
             const response = await db.query.trip.findFirst({
                 with: {
-                    activities: true
+                    activities: true,
                 },
                 where: eq(tripSchema.trip.id, parseInt(id))
             })
@@ -57,6 +57,25 @@ export function useTripDetails({ tripId }: { tripId: string }) {
             }
 
             setIsUpdatingTrip(true)
+
+            // Check if the activity is between the startAt and endsAt range
+            const activities = await db.query.activity.findMany({
+                where: (activity, { eq, or, lt, gt, and }) =>
+                    and(
+                        eq(activity.tripId, parseInt(tripId)), // Filter by tripId
+                        or(
+                            lt(activity.occursAt, formatTimestampToDate(selectedDates.startsAt?.timestamp)), // Before the start date
+                            gt(activity.occursAt, formatTimestampToDate(selectedDates.endsAt?.timestamp))    // After the end date
+                        )
+                    )
+            });
+
+            if (activities.length) {
+                // If the activity is not between the startAt and endsAt range, delete it
+                for (const activity of activities) {
+                    await db.delete(tripSchema.activity).where(eq(tripSchema.activity.id, activity.id))
+                }
+            }
 
             await db
                 .update(tripSchema.trip)
