@@ -19,13 +19,20 @@
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#FFFCE4"
-      }
+      },
+      "package": "com.kimuradev.triplanner"
     },
     "web": {
       "favicon": "./src/assets/favicon.png"
     },
     "plugins": [
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "c3bc094d-596a-4f80-921e-b67718150e86"
+      }
+    },
+    "owner": "leandro2ki"
   }
 }
