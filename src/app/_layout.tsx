@@ -24,7 +24,9 @@ const expoDb = openDatabaseSync(DATABASE_NAME);
 const db = drizzle(expoDb);
 
 export default function Layout() {
-    useDrizzleStudio(expoDb)
+    if (!process.env.EXPO_PUBLIC_DISABLE_FEATURE) {
+        useDrizzleStudio(expoDb)
+    }
     const { success, error } = useMigrations(db, migrations);
 
     const [fontsLoaded] = useFonts({
