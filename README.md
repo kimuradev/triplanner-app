@@ -4,10 +4,10 @@ The Triplanner app is a mobile application designed to help users efficiently or
 
 ### Technologies Used:
 
-React Native: The app is built using React Native, ensuring cross-platform compatibility for both iOS and Android, delivering a native mobile experience with a single codebase.
-TypeScript: The project is developed using TypeScript to provide type safety and improved code reliability, making it easier to catch errors early in the development process and enhance overall maintainability.
-Drizzle ORM: Drizzle ORM is used for database management, offering a simple and efficient way to interact with the underlying SQLite database. It enables type-safe queries and database operations, ensuring data consistency.
-SQLite: SQLite is utilized as the local database for storing user data, including destinations, activities, and trip information, ensuring fast and reliable data access even offline.
+- React Native: The app is built using React Native, ensuring cross-platform compatibility for both iOS and Android, delivering a native mobile experience with a single codebase.
+- TypeScript: The project is developed using TypeScript to provide type safety and improved code reliability, making it easier to catch errors early in the development process and enhance overall maintainability.
+- Drizzle ORM: Drizzle ORM is used for database management, offering a simple and efficient way to interact with the underlying SQLite database. It enables type-safe queries and database operations, ensuring data consistency.
+- SQLite: SQLite is utilized as the local database for storing user data, including destinations, activities, and trip information, ensuring fast and reliable data access even offline.
 
 ### Wireframe:
 
