@@ -1,7 +1,7 @@
 import { Keyboard, SectionList, Text, TouchableOpacity, View } from "react-native";
 
 import dayjs from "dayjs";
-import { Clock, Calendar as IconCalendar, PlusIcon, Tag } from "lucide-react-native";
+import { Clock, Calendar as IconCalendar, NotebookPen, PlusIcon, Tag } from "lucide-react-native";
 
 import { colors } from "@/styles/colors";
 import { Input } from "@/components/input";
@@ -31,7 +31,6 @@ export function Activities({ tripDetails }: { tripDetails: TripDataProps }) {
         handleCreateTripActivity,
         handleUpdateActivityModal,
     } = useActivity({ tripDetails })
-
 
     return (
         <View className="flex-1">
@@ -123,6 +122,25 @@ export function Activities({ tripDetails }: { tripDetails: TripDataProps }) {
                             />
                         </Input>
                     </View>
+
+                    <View className="mt-2">
+                        <Input variant="multiline">
+                            <NotebookPen color={activity.obs?.length ? colors.purple[900] : colors.zinc[400]} size={20} />
+                            <Input.Field
+                                placeholder="Observações"
+                                onChangeText={value => setActivity(state => ({
+                                    ...state,
+                                    obs: value
+                                }))}
+                                value={activity.obs}
+                                editable
+                                multiline
+                                autoCorrect={false}
+                                numberOfLines={4}
+                                scrollEnabled
+                            />
+                        </Input>
+                    </View>
                 </View>
 
                 <Button
@@ -131,7 +149,7 @@ export function Activities({ tripDetails }: { tripDetails: TripDataProps }) {
                 >
                     <Button.Title>Salvar atividade</Button.Title>
                 </Button>
-            </Modal>
+            </Modal >
 
             <Modal
                 visible={showModal === ActivityModal.UPDATE_ACTIVITY}
@@ -186,6 +204,26 @@ export function Activities({ tripDetails }: { tripDetails: TripDataProps }) {
                     </View>
                 </View>
 
+
+                <View className="mt-2">
+                    <Input variant="multiline">
+                        <NotebookPen color={activity.obs?.length ? colors.purple[900] : colors.zinc[400]} size={20} />
+                        <Input.Field
+                            placeholder="Observações"
+                            onChangeText={value => setActivity(state => ({
+                                ...state,
+                                obs: value
+                            }))}
+                            value={activity.obs}
+                            editable
+                            multiline
+                            autoCorrect={false}
+                            numberOfLines={4}
+                            scrollEnabled
+                        />
+                    </Input>
+                </View>
+
                 <View>
 
                     <Button
@@ -224,6 +262,6 @@ export function Activities({ tripDetails }: { tripDetails: TripDataProps }) {
                     </Button>
                 </View>
             </Modal>
-        </View>
+        </View >
     )
 }

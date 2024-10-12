@@ -18,11 +18,11 @@ export function useActivity({ tripDetails }: { tripDetails: TripDataProps }) {
 
     const [isCreatingActivity, setIsCreatingActivity] = useState(false)
 
-    const [activity, setActivity] = useState({ id: '', title: '', hour: '', date: '' })
+    const [activity, setActivity] = useState({ id: '', title: '', hour: '', date: '', obs: '' })
     const [tripActivities, setTripActivities] = useState<TripActivitiesProps[]>([])
 
     function resetNewActivityFields() {
-        setActivity({ id: '', title: '', hour: '', date: '' })
+        setActivity({ id: '', title: '', hour: '', date: '', obs: '' })
         setShowModal(ActivityModal.NONE)
     }
 
@@ -49,9 +49,9 @@ export function useActivity({ tripDetails }: { tripDetails: TripDataProps }) {
         })).filter(activity => activity.data.length > 0);
 
         if (filteredTripActivities[0].data) {
-            const { id, title, hour, date } = filteredTripActivities[0].data[0];
+            const { id, title, hour, date, obs } = filteredTripActivities[0].data[0];
 
-            setActivity({ id, title: title ?? '', hour: hour ?? '', date: date ?? '' })
+            setActivity({ id, title: title ?? '', hour: hour ?? '', date: date ?? '', obs: obs ?? '' })
         }
     }
 
@@ -115,7 +115,7 @@ export function useActivity({ tripDetails }: { tripDetails: TripDataProps }) {
 
     async function handleCreateTripActivity() {
         try {
-            const { title, date, hour } = activity
+            const { title, date, hour, obs } = activity
             if (!title || !date || !hour) {
                 return Alert.alert("Cadastrar atividade", "Preencha todos os campos!")
             }
@@ -131,6 +131,7 @@ export function useActivity({ tripDetails }: { tripDetails: TripDataProps }) {
                     tripId: tripDetails.id,
                     occursAt: dayjs(occursAt.toISOString()).toDate(),
                     title: title,
+                    obs
                 })
             }
 
@@ -147,7 +148,7 @@ export function useActivity({ tripDetails }: { tripDetails: TripDataProps }) {
 
     async function handleUpdateActivity() {
         try {
-            const { id, title, date, hour } = activity
+            const { id, title, date, hour, obs } = activity
             if (!title || !date || !hour) {
                 return Alert.alert("Atualizar atividade", "Preencha todos os campos!")
             }
@@ -161,7 +162,7 @@ export function useActivity({ tripDetails }: { tripDetails: TripDataProps }) {
 
                 await db.update(tripSchema.activity).set({
                     occursAt: dayjs(occursAt.toISOString()).toDate(),
-                    title: title,
+                    title,
                 }).where(eq(tripSchema.activity.id, parseInt(id)))
             }
 

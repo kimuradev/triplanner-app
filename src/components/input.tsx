@@ -5,12 +5,13 @@ import {
   View,
   ViewProps,
   Platform,
+  StyleSheet
 } from "react-native"
 import clsx from "clsx"
 
 import { colors } from "@/styles/colors"
 
-type Variants = "primary" | "secondary" | "tertiary"
+type Variants = "primary" | "secondary" | "multiline"
 
 type InputProps = ViewProps & {
   children: ReactNode
@@ -28,9 +29,9 @@ function Input({
       className={clsx(
         "min-h-16 max-h-16 flex-row items-center gap-2 bg-white px-4 rounded-xl ",
         {
-          "h-14 px-4 rounded-lg border border-zinc-200": variant !== "primary",
+          "rounded-lg border border-zinc-200": variant !== "primary",
           "bg-white border border-zinc-200": variant === "secondary",
-          "bg-zinc-900": variant === "tertiary",
+          "min-h-32 max-h-32": variant === "multiline",
         },
         className
       )}
@@ -51,10 +52,17 @@ function Field({ editable,  ...rest }: TextInputProps) {
       cursorColor={colors.zinc[100]}
       selectionColor={Platform.OS === "ios" ? colors.zinc[100] : undefined}
       keyboardType="visible-password" // remove underline for android
+      style={styles.input}
       {...rest}
     />
   )
 }
+
+const styles = StyleSheet.create({
+  input: {
+    textAlignVertical: 'top', // Important for Android
+  },
+});
 
 Input.Field = Field
 

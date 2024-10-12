@@ -16,6 +16,7 @@ export type ActivityProps = {
     hour: string
     isBefore: boolean
     date?: string
+    obs?: string
 }
 
 export enum ActivityModal {
