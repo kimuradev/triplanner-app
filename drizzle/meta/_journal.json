@@ -22,6 +22,13 @@
       "when": 1728059034702,
       "tag": "0002_red_black_cat",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1728731894487,
+      "tag": "0003_fancy_rogue",
+      "breakpoints": true
     }
   ]
 }

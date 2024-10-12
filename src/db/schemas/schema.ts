@@ -10,7 +10,8 @@ export const trip = sqliteTable("trips", {
     endsAt: integer('ends_at', { mode: 'timestamp' }).notNull(),
     scheduleDate: text("scheduleDate").notNull(),
     isConfirmed: integer('isConfirmed', { mode: 'boolean' }).notNull().default(false),
-    createdAt: integer('createdAt', { mode: 'timestamp' }).notNull().default(sql`(current_timestamp)`)
+    obs: text("obs").default(''),
+    createdAt: integer('createdAt', { mode: 'timestamp' }).notNull().default(sql`(current_timestamp)`),
 });
 
 // Define relations between the tables
