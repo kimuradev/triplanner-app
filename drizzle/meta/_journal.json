@@ -29,6 +29,13 @@
       "when": 1728731894487,
       "tag": "0003_fancy_rogue",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1728735977355,
+      "tag": "0004_friendly_paladin",
+      "breakpoints": true
     }
   ]
 }

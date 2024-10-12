@@ -10,7 +10,6 @@ export const trip = sqliteTable("trips", {
     endsAt: integer('ends_at', { mode: 'timestamp' }).notNull(),
     scheduleDate: text("scheduleDate").notNull(),
     isConfirmed: integer('isConfirmed', { mode: 'boolean' }).notNull().default(false),
-    obs: text("obs").default(''),
     createdAt: integer('createdAt', { mode: 'timestamp' }).notNull().default(sql`(current_timestamp)`),
 });
 
@@ -24,6 +23,7 @@ export const tripRelations = relations(trip, ({ many }) => ({
 export const activity = sqliteTable("activities", {
     id: integer("id").primaryKey(),
     title: text("title").notNull(),
+    obs: text("obs").default(''),
     occursAt: integer('occurs_at', { mode: 'timestamp' }).notNull(),
     tripId: integer("trip_id").notNull(), // Foreign key to `trip`
 });
