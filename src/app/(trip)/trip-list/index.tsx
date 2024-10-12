@@ -19,7 +19,7 @@ export default function TripListScreen() {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFCE4', paddingHorizontal: 16 }} edges={['right', 'left', 'top']} >
-            <View className='mb-4'>
+            <View className='mt-8 mb-4'>
                 <Search>
                     <SearchIcon color={colors.zinc[400]} size={20} />
                     <Search.Field

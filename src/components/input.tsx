@@ -5,7 +5,6 @@ import {
   View,
   ViewProps,
   Platform,
-  StyleSheet
 } from "react-native"
 import clsx from "clsx"
 
@@ -52,17 +51,10 @@ function Field({ editable,  ...rest }: TextInputProps) {
       cursorColor={colors.zinc[100]}
       selectionColor={Platform.OS === "ios" ? colors.zinc[100] : undefined}
       keyboardType="visible-password" // remove underline for android
-      style={styles.input}
       {...rest}
     />
   )
 }
-
-const styles = StyleSheet.create({
-  input: {
-    textAlignVertical: 'top', // Important for Android
-  },
-});
 
 Input.Field = Field
 
