@@ -202,27 +202,27 @@ export function Activities({ tripDetails }: { tripDetails: TripDataProps }) {
                             />
                         </Input>
                     </View>
+
+                    <View className="mt-2">
+                        <Input variant="multiline">
+                            <NotebookPen color={activity.obs?.length ? colors.purple[900] : colors.zinc[400]} size={20} />
+                            <Input.Field
+                                placeholder="Observações"
+                                onChangeText={value => setActivity(state => ({
+                                    ...state,
+                                    obs: value
+                                }))}
+                                value={activity.obs}
+                                editable
+                                multiline
+                                autoCorrect={false}
+                                numberOfLines={4}
+                                scrollEnabled
+                            />
+                        </Input>
+                    </View>
                 </View>
 
-
-                <View className="mt-2">
-                    <Input variant="multiline">
-                        <NotebookPen color={activity.obs?.length ? colors.purple[900] : colors.zinc[400]} size={20} />
-                        <Input.Field
-                            placeholder="Observações"
-                            onChangeText={value => setActivity(state => ({
-                                ...state,
-                                obs: value
-                            }))}
-                            value={activity.obs}
-                            editable
-                            multiline
-                            autoCorrect={false}
-                            numberOfLines={4}
-                            scrollEnabled
-                        />
-                    </Input>
-                </View>
 
                 <View>
 

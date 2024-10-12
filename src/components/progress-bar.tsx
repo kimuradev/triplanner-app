@@ -25,7 +25,6 @@ export function ProgressBar({ progress }: { progress: number }) {
     return (
         <View style={styles.container}>
             <Animated.View style={[styles.progressBar, animatedStyle]} />
-            {/* <Text style={styles.progressText}>{Math.floor(progress * 100)}%</Text> */}
         </View>
     );
 };
@@ -41,7 +40,7 @@ const styles = StyleSheet.create({
     },
     progressBar: {
       height: '100%',
-      backgroundColor: colors.green[300], // Green color for the progress bar
+      backgroundColor: colors.green[300],
     },
     progressText: {
       position: 'absolute',

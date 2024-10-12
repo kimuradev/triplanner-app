@@ -104,6 +104,7 @@ export function useActivity({ tripDetails }: { tripDetails: TripDataProps }) {
                     title: activity.title,
                     hour: dayjs(activity.occursAt).tz().format("HH[:]mm"),
                     isBefore: dayjs(activity.occursAt).tz().isBefore(dayjs().clone().tz(TIME_ZONE, true)),
+                    obs: activity.obs,
                 })),
             }));
 
@@ -163,6 +164,7 @@ export function useActivity({ tripDetails }: { tripDetails: TripDataProps }) {
                 await db.update(tripSchema.activity).set({
                     occursAt: dayjs(occursAt.toISOString()).toDate(),
                     title,
+                    obs
                 }).where(eq(tripSchema.activity.id, parseInt(id)))
             }
 
