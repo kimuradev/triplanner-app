@@ -1,0 +1,1 @@
+ALTER TABLE `activities` ADD `isDone` integer DEFAULT false NOT NULL;

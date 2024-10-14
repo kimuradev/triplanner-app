@@ -9,6 +9,7 @@ export type ActivityProps = {
   title: string
   hour: string
   isBefore: boolean
+  isDone: boolean
   obs?: string
 }
 
@@ -21,11 +22,11 @@ export function Activity({ data }: Props) {
     <View
       className={clsx(
         "w-full bg-red-500 px-4 py-3 rounded-lg gap-4",
-        { "opacity-50": data.isBefore }
+        { "opacity-50": data.isBefore || data.isDone }
       )}
     >
       <View className="flex-row items-center gap-3">
-        {data.isBefore ? (
+        {data.isBefore || data.isDone ? (
           <CircleCheck color={colors.purple[900]} size={20} />
         ) : (
           <CircleDashed color={colors.white} size={20} />

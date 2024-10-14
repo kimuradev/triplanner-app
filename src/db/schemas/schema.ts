@@ -25,6 +25,7 @@ export const activity = sqliteTable("activities", {
     title: text("title").notNull(),
     obs: text("obs").default(''),
     occursAt: integer('occurs_at', { mode: 'timestamp' }).notNull(),
+    isDone: integer('isDone', { mode: 'boolean' }).notNull().default(false),
     tripId: integer("trip_id").notNull(), // Foreign key to `trip`
 });
 

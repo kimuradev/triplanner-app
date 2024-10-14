@@ -36,6 +36,13 @@
       "when": 1728735977355,
       "tag": "0004_friendly_paladin",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1728911731680,
+      "tag": "0005_hot_hercules",
+      "breakpoints": true
     }
   ]
 }

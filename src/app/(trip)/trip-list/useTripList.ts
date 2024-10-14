@@ -5,8 +5,7 @@ import { useDatabase } from "@/db/useDatabase"
 import * as tripSchema from '@/db/schemas/schema'
 import { useIsFocused } from '@react-navigation/native';
 import { getTotalActivityCompleted } from "@/utils/activityUtils";
-
-import { ActivityDataProps } from "../trip-details/constants";
+import { ActivityProps } from "../trip-details/constants";
 
 export function useTripList() {
     const { db } = useDatabase<typeof tripSchema>({ schema: tripSchema })
@@ -40,7 +39,7 @@ export function useTripList() {
         setSearchDestination(text);
     };
 
-    function calculateProgress({ activities } :{ activities : ActivityDataProps[]}) {
+    function calculateProgress({ activities } :{ activities : ActivityProps[]}) {
         if (activities.length === 0) {
             return 0;
         }

@@ -3,20 +3,15 @@ export enum StepForm {
     UPDATE_ACTIVITY = 2,
 }
 
-export type ActivityDataProps = {
-    id: number;
-    title: string;
-    occursAt: Date;
-    tripId: number;
-}
-
 export type ActivityProps = {
-    id: string
-    title: string
-    hour: string
-    isBefore: boolean
-    date?: string
-    obs?: string
+    id: string;
+    title: string;
+    hour: string;
+    occursAt: Date;
+    isBefore: boolean;
+    isDone: boolean;
+    date?: string;
+    obs?: string;
 }
 
 export enum ActivityModal {
@@ -28,10 +23,10 @@ export enum ActivityModal {
 
 export type TripActivitiesProps = {
     title: {
-        dayNumber: number
-        dayName: string
-    }
-    data: ActivityProps[]
+        dayNumber: number;
+        dayName: string;
+    };
+    data: ActivityProps[];
 }
 
 export enum TripDetailsModal {
@@ -47,6 +42,6 @@ export type TripDataProps = {
     startsAt?: Date;
     endsAt?: Date;
     isConfirmed?: boolean;
-    activities?: ActivityDataProps[];
+    activities?: ActivityProps[];
     createdAt?: Date;
 }

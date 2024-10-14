@@ -39,7 +39,7 @@ export function useActivity({ tripDetails }: { tripDetails: TripDataProps }) {
         setStepForm(StepForm.NEW_ACTIVITY)
     }
 
-    const handleUpdateActivityModal = (id: string) => {
+    const handleUpdateActivityModal = ({ id }: { id: string }) => {
         setShowModal(ActivityModal.UPDATE_ACTIVITY);
         setStepForm(StepForm.UPDATE_ACTIVITY)
 
@@ -104,6 +104,7 @@ export function useActivity({ tripDetails }: { tripDetails: TripDataProps }) {
                     title: activity.title,
                     hour: dayjs(activity.occursAt).tz().format("HH[:]mm"),
                     isBefore: dayjs(activity.occursAt).tz().isBefore(dayjs().clone().tz(TIME_ZONE, true)),
+                    isDone: activity.isDone,
                     obs: activity.obs,
                 })),
             }));
@@ -111,7 +112,7 @@ export function useActivity({ tripDetails }: { tripDetails: TripDataProps }) {
             setTripActivities(activitiesToSectionList)
         } catch (error) {
             console.log(error)
-        } 
+        }
     }
 
     async function handleCreateTripActivity() {
@@ -157,7 +158,7 @@ export function useActivity({ tripDetails }: { tripDetails: TripDataProps }) {
             setIsCreatingActivity(true)
 
             if (tripDetails.id) {
-                const [hours, minutes] = hour.replace('h','').split(':').map(Number);
+                const [hours, minutes] = hour.replace('h', '').split(':').map(Number);
 
                 const occursAt = dayjs(date).tz().hour(hours).minute(minutes).second(0).millisecond(0)
 
@@ -203,6 +204,29 @@ export function useActivity({ tripDetails }: { tripDetails: TripDataProps }) {
         }
     }
 
+    async function handleLongPressActivity({ id }: { id: string }) {
+        try {
+            Alert.alert("Completar atividade", "A atividade já foi concluída?", [
+                {
+                    text: "Não",
+                    style: "cancel",
+                },
+                {
+                    text: "Sim",
+                    onPress: async () => {
+                        await db.update(tripSchema.activity).set({
+                            isDone: true,
+                        }).where(eq(tripSchema.activity.id, parseInt(id)))
+
+                        await getTripActivities()
+                    },
+                },
+            ])
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     useEffect(() => {
         getTripActivities()
     }, [tripDetails.id, tripDetails.scheduleDate])
@@ -221,6 +245,7 @@ export function useActivity({ tripDetails }: { tripDetails: TripDataProps }) {
         handleUpdateActivity,
         handleRemoveActivity,
         resetNewActivityFields,
+        handleLongPressActivity,
         handleCreateTripActivity,
         handleUpdateActivityModal,
     }

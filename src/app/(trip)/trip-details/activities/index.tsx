@@ -28,6 +28,7 @@ export function Activities({ tripDetails }: { tripDetails: TripDataProps }) {
         handleUpdateActivity,
         handleRemoveActivity,
         resetNewActivityFields,
+        handleLongPressActivity,
         handleCreateTripActivity,
         handleUpdateActivityModal,
     } = useActivity({ tripDetails })
@@ -46,7 +47,12 @@ export function Activities({ tripDetails }: { tripDetails: TripDataProps }) {
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => {
                     return item.isBefore ? <Activity data={item} /> : (
-                        <PressableOpacity onPress={() => handleUpdateActivityModal(item.id)}>
+                        <PressableOpacity
+                            onPress={() => handleUpdateActivityModal({ id: item.id })}
+                            onLongPress={() => handleLongPressActivity({ id: item.id })}
+
+
+                        >
                             <Activity data={item} />
                         </PressableOpacity>
                     )
