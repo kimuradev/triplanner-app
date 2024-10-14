@@ -10,12 +10,30 @@ import * as tripSchema from '@/db/schemas/schema'
 import { formatTimestampToDate } from '@/utils/dateTimeUtils';
 import { calendarUtils, DatesSelected } from '@/utils/calendarUtils';
 
-import { TripDataProps, TripDetailsModal } from './constants';
+import { TripDetailsModal } from './constants';
+
+type ActivityDataProps = {
+    id: number;
+    title: string;
+    occursAt: Date;
+    isDone: boolean;
+    obs: string | null;
+    tripId: number;
+}
+
+type TripProps = {
+    destination: string;
+    scheduleDate: string;
+    activities: ActivityDataProps[];
+}
 
 export function useTripDetails({ tripId }: { tripId: string }) {
-    const [data, setData] = useState<TripDataProps>({
+   
+
+    const [data, setData] = useState<TripProps>({
         destination: '',
-        scheduleDate: ''
+        scheduleDate: '',
+        activities: []
     })
     const { db } = useDatabase<typeof tripSchema>({ schema: tripSchema })
     const [isUpdatingTrip, setIsUpdatingTrip] = useState(false)
@@ -58,20 +76,18 @@ export function useTripDetails({ tripId }: { tripId: string }) {
 
             setIsUpdatingTrip(true)
 
-            // Check if the activity is between the startAt and endsAt range
             const activities = await db.query.activity.findMany({
                 where: (activity, { eq, or, lt, gt, and }) =>
                     and(
-                        eq(activity.tripId, parseInt(tripId)), // Filter by tripId
+                        eq(activity.tripId, parseInt(tripId)),
                         or(
-                            lt(activity.occursAt, formatTimestampToDate(selectedDates.startsAt?.timestamp)), // Before the start date
-                            gt(activity.occursAt, formatTimestampToDate(selectedDates.endsAt?.timestamp))    // After the end date
+                            lt(activity.occursAt, formatTimestampToDate(selectedDates.startsAt?.timestamp)),
+                            gt(activity.occursAt, formatTimestampToDate(selectedDates.endsAt?.timestamp))
                         )
                     )
             });
 
             if (activities.length) {
-                // If the activity is not between the startAt and endsAt range, delete it
                 for (const activity of activities) {
                     await db.delete(tripSchema.activity).where(eq(tripSchema.activity.id, activity.id))
                 }

@@ -2,14 +2,13 @@ import { useState } from "react"
 import { Alert } from "react-native"
 import { router } from "expo-router"
 import { DateData } from "react-native-calendars"
-import dayjs from "dayjs"
 
 import { StepForm } from "./constants"
 import { calendarUtils, DatesSelected } from "@/utils/calendarUtils"
 
 import { useDatabase } from "@/db/useDatabase"
 import * as tripSchema from '@/db/schemas/schema'
-import { formatTimestampToDate } from "@/utils/dateTimeUtils"
+import { createTrip } from "@/services/tripService"
 
 export function useTrip() {
     const { db } = useDatabase({ schema: tripSchema })
@@ -59,20 +58,11 @@ export function useTrip() {
         setSelectedDates(dates)
     }
 
-
     const handleAddTrip = async () => {
         setIsCreatingTrip(true)
 
         try {
-            await db.insert(tripSchema.trip).values({
-                destination,
-                startsAt: formatTimestampToDate(selectedDates.startsAt?.timestamp),
-                endsAt: formatTimestampToDate(selectedDates.endsAt?.timestamp),
-                scheduleDate: calendarUtils.formatDatesInText({
-                    startsAt: dayjs(formatTimestampToDate(selectedDates.startsAt?.timestamp)).tz(),
-                    endsAt: dayjs(formatTimestampToDate(selectedDates.endsAt?.timestamp)).tz()
-                })
-            })
+            await createTrip({ db, destination, selectedDates });
 
             Alert.alert("Destino adicionado com sucesso.")
 

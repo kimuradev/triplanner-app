@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { desc, like } from "drizzle-orm"
+import { asc, like } from "drizzle-orm"
 import { useDatabase } from "@/db/useDatabase"
 import * as tripSchema from '@/db/schemas/schema'
 import { useIsFocused } from '@react-navigation/native';
@@ -22,7 +22,7 @@ export function useTripList() {
                     activities: true
                 },
                 where: like(tripSchema.trip.destination, `%${searchDestination}%`),
-                orderBy: [desc(tripSchema.trip.createdAt)],
+                orderBy: [asc(tripSchema.trip.startsAt)],
             })
 
             setData(response)

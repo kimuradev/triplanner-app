@@ -3,15 +3,7 @@ import { CircleDashed, CircleCheck, NotebookPen } from "lucide-react-native"
 
 import { colors } from "@/styles/colors"
 import clsx from "clsx"
-
-export type ActivityProps = {
-  id: string
-  title: string
-  hour: string
-  isBefore: boolean
-  isDone: boolean
-  obs?: string
-}
+import { ActivityProps } from "@/app/(trip)/trip-details/constants"
 
 type Props = {
   data: ActivityProps
