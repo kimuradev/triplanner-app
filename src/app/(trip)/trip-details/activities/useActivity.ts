@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import { Alert } from "react-native";
-
 import dayjs from "dayjs";
-import { eq } from "drizzle-orm";
 
 import { TIME_ZONE } from "@/utils/constants";
 import { useDatabase } from "@/db/useDatabase";
 import * as tripSchema from '@/db/schemas/schema'
 import { formatHour } from "@/utils/dateTimeUtils";
-import { ActivityModal, StepForm, TripActivitiesProps, TripDataProps } from "../constants";
+import { ActivityModal, ActivityProps, StepForm, TripActivitiesProps, TripDataProps } from "../constants";
+import { createActivity, deleteActivitiesById, getActivitiesById, updateActivityById, updateActivityDone } from "@/services/activityService";
 
 export function useActivity({ tripDetails }: { tripDetails: TripDataProps }) {
     const { db } = useDatabase<typeof tripSchema>({ schema: tripSchema })
@@ -58,12 +57,7 @@ export function useActivity({ tripDetails }: { tripDetails: TripDataProps }) {
     async function getActivitiesByTripId({ id }: { id: number | undefined }) {
         if (!id) return [];
 
-        const trip = await db.query.trip.findFirst({
-            where: eq(tripSchema.trip.id, id),
-            with: {
-                activities: true
-            },
-        });
+        const trip = await getActivitiesById({ db, id })
 
         if (!trip) {
             throw new Error('Trip not found.')
@@ -81,7 +75,7 @@ export function useActivity({ tripDetails }: { tripDetails: TripDataProps }) {
 
             return {
                 date: dateToCompare.toDate(),
-                activities: trip.activities.filter((activity) => {
+                activities: trip.activities.filter((activity: { occursAt: Date }) => {
                     return dayjs.utc(activity.occursAt).isSame(dateToCompare, 'day');
                 }),
             };
@@ -99,7 +93,7 @@ export function useActivity({ tripDetails }: { tripDetails: TripDataProps }) {
                     dayNumber: dayjs(dayActivity.date).tz().date(),
                     dayName: dayjs(dayActivity.date).tz().format("dddd").replace("-feira", ""),
                 },
-                data: dayActivity.activities.sort((a, b) => dayjs(a.occursAt).tz().diff(dayjs(b.occursAt).tz())).map((activity) => ({
+                data: dayActivity.activities.sort((a: ActivityProps, b: ActivityProps) => dayjs(a.occursAt).tz().diff(dayjs(b.occursAt).tz())).map((activity: ActivityProps) => ({
                     id: activity.id,
                     title: activity.title,
                     hour: dayjs(activity.occursAt).tz().format("HH[:]mm"),
@@ -115,7 +109,7 @@ export function useActivity({ tripDetails }: { tripDetails: TripDataProps }) {
         }
     }
 
-    async function handleCreateTripActivity() {
+    async function handleCreateActivity() {
         try {
             const { title, date, hour, obs } = activity
             if (!title || !date || !hour) {
@@ -126,15 +120,9 @@ export function useActivity({ tripDetails }: { tripDetails: TripDataProps }) {
 
             if (tripDetails.id) {
                 const [hours, minutes] = hour.split(':').map(Number);
-
                 const occursAt = dayjs(date).tz().hour(hours).minute(minutes).second(0).millisecond(0)
 
-                await db.insert(tripSchema.activity).values({
-                    tripId: tripDetails.id,
-                    occursAt: dayjs(occursAt.toISOString()).toDate(),
-                    title: title,
-                    obs
-                })
+                await createActivity({ db, tripId: tripDetails.id, occursAt, title, obs })
             }
 
             Alert.alert("Nova Atividade", "Nova atividade cadastrada com sucesso!")
@@ -162,11 +150,7 @@ export function useActivity({ tripDetails }: { tripDetails: TripDataProps }) {
 
                 const occursAt = dayjs(date).tz().hour(hours).minute(minutes).second(0).millisecond(0)
 
-                await db.update(tripSchema.activity).set({
-                    occursAt: dayjs(occursAt.toISOString()).toDate(),
-                    title,
-                    obs
-                }).where(eq(tripSchema.activity.id, parseInt(id)))
+                await updateActivityById({ db, id: parseInt(id), occursAt, title, obs })
             }
 
             Alert.alert("Atualizar Atividade", "Atividade atualizada com sucesso!")
@@ -190,9 +174,7 @@ export function useActivity({ tripDetails }: { tripDetails: TripDataProps }) {
                 {
                     text: "Sim",
                     onPress: async () => {
-                        await db
-                            .delete(tripSchema.activity)
-                            .where(eq(tripSchema.activity.id, id))
+                        await deleteActivitiesById({ db, id })
 
                         await getTripActivities()
                         resetNewActivityFields()
@@ -214,9 +196,7 @@ export function useActivity({ tripDetails }: { tripDetails: TripDataProps }) {
                 {
                     text: "Sim",
                     onPress: async () => {
-                        await db.update(tripSchema.activity).set({
-                            isDone: true,
-                        }).where(eq(tripSchema.activity.id, parseInt(id)))
+                        await updateActivityDone({ db, id: parseInt(id) })
 
                         await getTripActivities()
                     },
@@ -242,11 +222,11 @@ export function useActivity({ tripDetails }: { tripDetails: TripDataProps }) {
         setShowModal,
         handleHourChange,
         handleNewActivity,
+        handleCreateActivity,
         handleUpdateActivity,
         handleRemoveActivity,
         resetNewActivityFields,
         handleLongPressActivity,
-        handleCreateTripActivity,
         handleUpdateActivityModal,
     }
 }

@@ -1,16 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Alert } from 'react-native';
-import dayjs from 'dayjs';
-import { eq } from 'drizzle-orm';
 import { router } from 'expo-router';
 import { DateData } from 'react-native-calendars';
 
 import { useDatabase } from "@/db/useDatabase"
 import * as tripSchema from '@/db/schemas/schema'
-import { formatTimestampToDate } from '@/utils/dateTimeUtils';
 import { calendarUtils, DatesSelected } from '@/utils/calendarUtils';
 
 import { TripDetailsModal, TripDataProps } from './constants';
+import { deleteTripById, getTripWithActivitiesById, updateTripById } from '@/services/tripService';
+import { deleteActivitiesById, getActivitiesOutsideOfDateRange} from '@/services/activityService';
 
 export function useTripDetails({ tripId }: { tripId: string }) {
     const [data, setData] = useState<TripDataProps>({
@@ -27,12 +26,7 @@ export function useTripDetails({ tripId }: { tripId: string }) {
 
     async function getTripById({ id }: { id: string }) {
         try {
-            const response = await db.query.trip.findFirst({
-                with: {
-                    activities: true,
-                },
-                where: eq(tripSchema.trip.id, parseInt(id))
-            })
+            const response = await getTripWithActivitiesById({ db, id })
 
             if (response) {
                 setData(response)
@@ -59,35 +53,15 @@ export function useTripDetails({ tripId }: { tripId: string }) {
 
             setIsUpdatingTrip(true)
 
-            const activities = await db.query.activity.findMany({
-                where: (activity, { eq, or, lt, gt, and }) =>
-                    and(
-                        eq(activity.tripId, parseInt(tripId)),
-                        or(
-                            lt(activity.occursAt, formatTimestampToDate(selectedDates.startsAt?.timestamp)),
-                            gt(activity.occursAt, formatTimestampToDate(selectedDates.endsAt?.timestamp))
-                        )
-                    )
-            });
+            const activities = await getActivitiesOutsideOfDateRange({ db, tripId, selectedDates })
 
             if (activities.length) {
                 for (const activity of activities) {
-                    await db.delete(tripSchema.activity).where(eq(tripSchema.activity.id, activity.id))
+                    await deleteActivitiesById({ db, id: activity.id })
                 }
             }
 
-            await db
-                .update(tripSchema.trip)
-                .set({
-                    destination: destination,
-                    startsAt: formatTimestampToDate(selectedDates.startsAt?.timestamp),
-                    endsAt: formatTimestampToDate(selectedDates.endsAt.timestamp),
-                    scheduleDate: calendarUtils.formatDatesInText({
-                        startsAt: dayjs(formatTimestampToDate(selectedDates.startsAt?.timestamp)).tz(),
-                        endsAt: dayjs(formatTimestampToDate(selectedDates.endsAt.timestamp)).tz()
-                    })
-                })
-                .where(eq(tripSchema.trip.id, parseInt(tripId)));
+            await updateTripById({ db, tripId, destination, selectedDates })
 
             Alert.alert("Atualizar viagem", "Viagem atualizada com sucesso!", [
                 {
@@ -115,9 +89,7 @@ export function useTripDetails({ tripId }: { tripId: string }) {
                 {
                     text: "Sim",
                     onPress: async () => {
-                        await db
-                            .delete(tripSchema.trip)
-                            .where(eq(tripSchema.trip.id, id))
+                        await deleteTripById({ db, id })
 
                         router.navigate('/')
                     },

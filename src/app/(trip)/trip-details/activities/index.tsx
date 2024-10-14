@@ -1,5 +1,4 @@
 import { Keyboard, SectionList, Text, TouchableOpacity, View } from "react-native";
-
 import dayjs from "dayjs";
 import { Clock, Calendar as IconCalendar, NotebookPen, PlusIcon, Tag } from "lucide-react-native";
 
@@ -25,11 +24,11 @@ export function Activities({ tripDetails }: { tripDetails: TripDataProps }) {
         setShowModal,
         handleHourChange,
         handleNewActivity,
+        handleCreateActivity,
         handleUpdateActivity,
         handleRemoveActivity,
         resetNewActivityFields,
         handleLongPressActivity,
-        handleCreateTripActivity,
         handleUpdateActivityModal,
     } = useActivity({ tripDetails })
 
@@ -148,7 +147,7 @@ export function Activities({ tripDetails }: { tripDetails: TripDataProps }) {
                 </View>
 
                 <Button
-                    onPress={handleCreateTripActivity}
+                    onPress={handleCreateActivity}
                     isLoading={isCreatingActivity}
                 >
                     <Button.Title>Salvar atividade</Button.Title>
