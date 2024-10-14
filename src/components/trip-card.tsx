@@ -2,16 +2,16 @@ import { Text, View } from "react-native";
 import { MapPin } from "lucide-react-native";
 
 import { colors } from "@/styles/colors";
-import { ActivityDataProps } from "@/app/(trip)/trip-details/constants";
 
 import PressableOpacity from "./pressable";
 import { ProgressBar } from "./progress-bar";
 import { getTotalActivityCompleted } from "@/utils/activityUtils";
+import { ActivityProps } from "@/app/(trip)/trip-details/constants";
 
 type TripDataProps = {
     destination: string,
     scheduleDate: string,
-    activities: ActivityDataProps[]
+    activities: ActivityProps[]
 }
 
 type TripCardProps = {

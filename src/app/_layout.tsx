@@ -11,7 +11,6 @@ import {
     PlusJakartaSans_400Regular,
     PlusJakartaSans_800ExtraBold
 } from "@expo-google-fonts/plus-jakarta-sans"
-import { TripContextProvider } from '@/context/trip-context';
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { useDrizzleStudio } from "expo-drizzle-studio-plugin";
 import { useMigrations } from 'drizzle-orm/expo-sqlite/migrator';
@@ -51,13 +50,11 @@ export default function Layout() {
 
     return (
         <SQLiteProvider databaseName={DATABASE_NAME}>
-            <TripContextProvider>
-                <StatusBar style="dark" backgroundColor="transparent" translucent />
-                <Stack>
-                    <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                    <Stack.Screen name="(trip)/trip-details/[id]" options={{ title: 'Detalhes da viagem', headerBackTitle: 'Voltar' }} />
-                </Stack>
-            </TripContextProvider>
+            <StatusBar style="dark" backgroundColor="transparent" translucent />
+            <Stack>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen name="(trip)/trip-details/[id]" options={{ title: 'Detalhes da viagem', headerBackTitle: 'Voltar' }} />
+            </Stack>
         </SQLiteProvider>
     );
 }

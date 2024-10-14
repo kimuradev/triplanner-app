@@ -46,12 +46,10 @@ export function Activities({ tripDetails }: { tripDetails: TripDataProps }) {
                 sections={tripActivities}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => {
-                    return item.isBefore ? <Activity data={item} /> : (
+                    return item.isBefore || item.isDone ? <Activity data={item} /> : (
                         <PressableOpacity
                             onPress={() => handleUpdateActivityModal({ id: item.id })}
                             onLongPress={() => handleLongPressActivity({ id: item.id })}
-
-
                         >
                             <Activity data={item} />
                         </PressableOpacity>
@@ -229,9 +227,7 @@ export function Activities({ tripDetails }: { tripDetails: TripDataProps }) {
                     </View>
                 </View>
 
-
                 <View>
-
                     <Button
                         onPress={handleUpdateActivity}
                         isLoading={isCreatingActivity}

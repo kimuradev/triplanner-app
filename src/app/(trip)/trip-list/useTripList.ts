@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 
-import { asc, like } from "drizzle-orm"
 import { useDatabase } from "@/db/useDatabase"
 import * as tripSchema from '@/db/schemas/schema'
 import { useIsFocused } from '@react-navigation/native';
-import { getTotalActivityCompleted } from "@/utils/activityUtils";
 import { ActivityProps } from "../trip-details/constants";
+import { getTripByDestination } from "@/services/tripService";
+import { getTotalActivityCompleted } from "@/utils/activityUtils";
 
 export function useTripList() {
     const { db } = useDatabase<typeof tripSchema>({ schema: tripSchema })
@@ -17,13 +17,7 @@ export function useTripList() {
 
     async function fetchTrips() {
         try {
-            const response = await db.query.trip.findMany({
-                with: {
-                    activities: true
-                },
-                where: like(tripSchema.trip.destination, `%${searchDestination}%`),
-                orderBy: [asc(tripSchema.trip.startsAt)],
-            })
+            const response = await getTripByDestination({ db, searchDestination })
 
             setData(response)
         } catch (error) {
@@ -39,7 +33,7 @@ export function useTripList() {
         setSearchDestination(text);
     };
 
-    function calculateProgress({ activities } :{ activities : ActivityProps[]}) {
+    function calculateProgress({ activities }: { activities: ActivityProps[] }) {
         if (activities.length === 0) {
             return 0;
         }

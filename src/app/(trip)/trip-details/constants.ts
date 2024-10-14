@@ -11,7 +11,7 @@ export type ActivityProps = {
     isBefore: boolean;
     isDone: boolean;
     date?: string;
-    obs?: string;
+    obs?: string | null;
 }
 
 export enum ActivityModal {
@@ -37,11 +37,31 @@ export enum TripDetailsModal {
 
 export type TripDataProps = {
     id?: number;
+    tripId?: number;
     destination: string;
     scheduleDate: string;
     startsAt?: Date;
     endsAt?: Date;
     isConfirmed?: boolean;
     activities?: ActivityProps[];
+    createdAt?: Date;
+}
+
+export type TripResponseDataProps = {
+    id?: number;
+    tripId?: number;
+    destination: string;
+    scheduleDate: string;
+    startsAt?: Date;
+    endsAt?: Date;
+    isConfirmed?: boolean;
+    activities?: {
+        id: number;
+        title: string;
+        occursAt: Date;
+        isDone: boolean;
+        obs: string | null;
+        tripId: number;
+    }[]
     createdAt?: Date;
 }

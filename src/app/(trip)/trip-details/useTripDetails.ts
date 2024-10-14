@@ -10,27 +10,10 @@ import * as tripSchema from '@/db/schemas/schema'
 import { formatTimestampToDate } from '@/utils/dateTimeUtils';
 import { calendarUtils, DatesSelected } from '@/utils/calendarUtils';
 
-import { TripDetailsModal } from './constants';
-
-type ActivityDataProps = {
-    id: number;
-    title: string;
-    occursAt: Date;
-    isDone: boolean;
-    obs: string | null;
-    tripId: number;
-}
-
-type TripProps = {
-    destination: string;
-    scheduleDate: string;
-    activities: ActivityDataProps[];
-}
+import { TripDetailsModal, TripDataProps } from './constants';
 
 export function useTripDetails({ tripId }: { tripId: string }) {
-   
-
-    const [data, setData] = useState<TripProps>({
+    const [data, setData] = useState<TripDataProps>({
         destination: '',
         scheduleDate: '',
         activities: []
