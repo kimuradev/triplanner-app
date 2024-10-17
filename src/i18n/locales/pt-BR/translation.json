@@ -1,0 +1,85 @@
+{
+    "language": "Language",
+    "tabs": {
+        "nextDestination": "Próximo destino",
+        "myTrips": "Minhas viagens"
+    },
+    "home": {
+        "subtitle": "Planeje sua próxima viagem",
+        "where": "Para onde?",
+        "when": "Quando?",
+        "continue": "Continuar",
+        "tripChange": "Alterar local/data",
+        "confirm": "Confirmar viagem",
+        "minCharsMessage": "O destino deve ter pelo menos 4 caracteres.",
+        "fillAllRequiredMessage": "Preencha todos as informações da viagem para seguir.",
+        "destinationSuccessMessage": "Destino adicionado com sucesso."
+    },
+    "tripList": {
+        "search": "Pesquisar por cidade ou país...",
+        "destinationNotFound": "Nenhum destino encontrado."
+    },
+    "trip": {
+        "header": "Detalhes da viagem",
+        "back": "Voltar",
+        "day": "Dia",
+        "yes": "Sim",
+        "no": "Não",
+        "ok": "OK",
+        "tripNotFound": "Viagem não encontrada.",
+        "activities": {
+            "noActivitiesMessage": "Nenhuma atividade cadastrada nessa data.",
+            "addActivity": "Cadastrar atividade",
+            "fillRequiredFieldsMessage": "Preencha todos os campos!",
+            "newActivity": "Nova Atividade",
+            "newActivitySuccessMessage": "Nova atividade cadastrada com sucesso!",
+            "updateActivity": "Atualizar atividade",
+            "updateActivitySuccessMessage": "Atividade atualizada com sucesso!",
+            "removeActivity": "Remover atividade",
+            "removeActivityMessage": "Tem certeza que deseja remover a atividade?",
+            "activityDone": "Completar atividade",
+            "activityDoneMessage": "A atividade já foi concluída?"
+        },
+        "details": {
+            "updateTrip": "Atualizar viagem",
+            "updateTripMessage":  "Lembre-se de, além de preencher o destino, selecione data de início e fim da viagem.",
+            "updateTripSuccessMessage": "Viagem atualizada com sucesso!",
+            "removeTrip": "Remover viagem",
+            "removeTripMessage": "Tem certeza que deseja remover a viagem"
+        }
+    },
+    "modal": {
+        "where": "Para onde?",
+        "when": "Quando?",
+        "tripRemove": "Remover viagem",
+        "activityRemove": "Remover atividade",
+        "add": {
+            "title": "Cadastrar atividade",
+            "subtitle": "As atividades serão automaticamente concluídas após o horário.",
+            "whichActivity": "Qual atividade?",
+            "date": "Data",
+            "time": "Horário",
+            "notes": "Observações",
+            "save": "Salvar atividade"
+        },
+        "edit": {
+            "title": "Atualizar viagem",
+            "subtitle": "Somente quem criou a viagem pode atualizar.",
+            "update": "Atualizar"
+        },
+        "update": {
+            "title": "Atualizar atividade",
+            "subtitle": "As atividades serão automaticamente concluídas após o horário.",
+            "whichActivity": "Qual atividade?",
+            "date": "Data",
+            "time": "Horário",
+            "notes": "Observações",
+            "save": "Atualizar atividade"
+        },
+        "dates": {
+            "title": "Selecionar datas",
+            "subtitle": "Selecione a data de ida e volta da viagem",
+            "confirm": "Confirm"
+        }
+    }
+}

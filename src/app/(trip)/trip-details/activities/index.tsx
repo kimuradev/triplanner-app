@@ -1,5 +1,6 @@
 import { Keyboard, SectionList, Text, TouchableOpacity, View } from "react-native";
 import dayjs from "dayjs";
+import { useTranslation } from "react-i18next";
 import { Clock, Calendar as IconCalendar, NotebookPen, PlusIcon, Tag } from "lucide-react-native";
 
 import { colors } from "@/styles/colors";
@@ -14,6 +15,7 @@ import { useActivity } from "./useActivity";
 import { ActivityModal, StepForm, TripDataProps } from "../constants";
 
 export function Activities({ tripDetails }: { tripDetails: TripDataProps }) {
+    const { t } = useTranslation()
     const {
         activity,
         stepForm,
@@ -36,7 +38,7 @@ export function Activities({ tripDetails }: { tripDetails: TripDataProps }) {
         <View className="flex-1">
             <View className="w-full flex-row justify-end mt-5 mb-6 items-center">
                 <Button className="flex-row items-center justify-center px-4" onPress={handleNewActivity}>
-                    <Button.Title>Nova atividade</Button.Title>
+                    <Button.Title>{t('trip.activities.newActivity')}</Button.Title>
                     <PlusIcon color={colors.white} size={18} />
                 </Button>
             </View>
@@ -57,7 +59,7 @@ export function Activities({ tripDetails }: { tripDetails: TripDataProps }) {
                 renderSectionHeader={({ section }) => (
                     <View className="w-full">
                         <Text className="text-purple-300 text-2xl font-semibold py-2">
-                            Dia {section.title.dayNumber + " "}
+                            {t('trip.day')} {section.title.dayNumber + " "}
                             <Text className="text-purple-500 text-base font-regular capitalize">
                                 {section.title.dayName}
                             </Text>
@@ -65,7 +67,7 @@ export function Activities({ tripDetails }: { tripDetails: TripDataProps }) {
 
                         {section.data.length === 0 && (
                             <Text className="text-purple-300 font-regular text-sm mb-8">
-                                Nenhuma atividade cadastrada nessa data.
+                                {t('trip.noActivitiesMessage')}
                             </Text>
                         )}
                     </View>
@@ -76,15 +78,15 @@ export function Activities({ tripDetails }: { tripDetails: TripDataProps }) {
 
             <Modal
                 visible={showModal === ActivityModal.NEW_ACTIVITY}
-                title="Cadastrar atividade"
-                subtitle="As atividades serão automaticamente concluídas após o horário."
+                title={t('modal.add.title')}
+                subtitle={t('modal.add.subtitle')}
                 onClose={resetNewActivityFields}
             >
                 <View className="mt-4 mb-3">
                     <Input variant="secondary">
                         <Tag color={activity.title?.length ? colors.purple[900] : colors.zinc[400]} size={20} />
                         <Input.Field
-                            placeholder="Qual atividade?"
+                            placeholder={t('modal.add.whichActivity')}
                             onChangeText={value => setActivity(state => ({
                                 ...state,
                                 title: value
@@ -98,7 +100,7 @@ export function Activities({ tripDetails }: { tripDetails: TripDataProps }) {
                         <Input variant="secondary" className="flex-1">
                             <IconCalendar color={activity.date?.length ? colors.purple[900] : colors.zinc[400]} size={20} />
                             <Input.Field
-                                placeholder="Data"
+                                placeholder={t('modal.add.date')}
                                 onChangeText={value => setActivity(state => ({
                                     ...state,
                                     date: value
@@ -116,7 +118,7 @@ export function Activities({ tripDetails }: { tripDetails: TripDataProps }) {
                         <Input variant="secondary" className="flex-1">
                             <Clock color={activity.hour?.length ? colors.purple[900] : colors.zinc[400]} size={20} />
                             <Input.Field
-                                placeholder="Horário?"
+                                placeholder={t('modal.add.time')}
                                 onChangeText={handleHourChange}
                                 value={activity.hour}
                                 keyboardType="numeric"
@@ -130,7 +132,7 @@ export function Activities({ tripDetails }: { tripDetails: TripDataProps }) {
                         <Input variant="multiline">
                             <NotebookPen color={activity.obs?.length ? colors.purple[900] : colors.zinc[400]} size={20} />
                             <Input.Field
-                                placeholder="Observações"
+                                placeholder={t('modal.add.notes')}
                                 onChangeText={value => setActivity(state => ({
                                     ...state,
                                     obs: value
@@ -150,21 +152,21 @@ export function Activities({ tripDetails }: { tripDetails: TripDataProps }) {
                     onPress={handleCreateActivity}
                     isLoading={isCreatingActivity}
                 >
-                    <Button.Title>Salvar atividade</Button.Title>
+                    <Button.Title>{t('modal.add.save')}</Button.Title>
                 </Button>
             </Modal >
 
             <Modal
                 visible={showModal === ActivityModal.UPDATE_ACTIVITY}
-                title="Atualizar atividade"
-                subtitle="As atividades serão automaticamente concluídas após o horário."
+                title={t('modal.update.title')}
+                subtitle={t('modal.update.subtitle')}
                 onClose={resetNewActivityFields}
             >
                 <View className="mt-4 mb-3">
                     <Input variant="secondary">
                         <Tag color={activity.title?.length ? colors.purple[900] : colors.zinc[400]} size={20} />
                         <Input.Field
-                            placeholder="Qual atividade?"
+                            placeholder={t('modal.update.whichActivity')}
                             onChangeText={value => setActivity(state => ({
                                 ...state,
                                 title: value
@@ -178,7 +180,7 @@ export function Activities({ tripDetails }: { tripDetails: TripDataProps }) {
                         <Input variant="secondary" className="flex-1">
                             <IconCalendar color={activity.date?.length ? colors.purple[900] : colors.zinc[400]} size={20} />
                             <Input.Field
-                                placeholder="Data"
+                                placeholder={t('modal.update.date')}
                                 onChangeText={value => setActivity(state => ({
                                     ...state,
                                     date: value
@@ -196,7 +198,7 @@ export function Activities({ tripDetails }: { tripDetails: TripDataProps }) {
                         <Input variant="secondary" className="flex-1">
                             <Clock color={activity.hour?.length ? colors.purple[900] : colors.zinc[400]} size={20} />
                             <Input.Field
-                                placeholder="Horário?"
+                                placeholder={t('modal.update.time')}
                                 onChangeText={handleHourChange}
                                 value={activity.hour}
                                 keyboardType="numeric"
@@ -210,7 +212,7 @@ export function Activities({ tripDetails }: { tripDetails: TripDataProps }) {
                         <Input variant="multiline">
                             <NotebookPen color={activity.obs?.length ? colors.purple[900] : colors.zinc[400]} size={20} />
                             <Input.Field
-                                placeholder="Observações"
+                                placeholder={t('modal.update.notes')}
                                 onChangeText={value => setActivity(state => ({
                                     ...state,
                                     obs: value
@@ -231,18 +233,18 @@ export function Activities({ tripDetails }: { tripDetails: TripDataProps }) {
                         onPress={handleUpdateActivity}
                         isLoading={isCreatingActivity}
                     >
-                        <Button.Title>Atualizar atividade</Button.Title>
+                        <Button.Title>{t('modal.update.save')}</Button.Title>
                     </Button>
 
                     <TouchableOpacity activeOpacity={0.8} onPress={() => handleRemoveActivity({ id: parseInt(activity.id) })}>
-                        <Text className="text-red-400 text-center mt-6">Remover atividade</Text>
+                        <Text className="text-red-400 text-center mt-6">{t('modal.activityRemove')}</Text>
                     </TouchableOpacity>
                 </View>
             </Modal>
 
             <Modal
-                title="Selecionar data"
-                subtitle="Selecione a data da atividade"
+                title={t('modal.dates.title')}
+                subtitle={t('modal.dates.subtitle')}
                 visible={showModal === ActivityModal.CALENDAR}
                 onClose={() => setShowModal(ActivityModal.NONE)}
             >
@@ -259,7 +261,7 @@ export function Activities({ tripDetails }: { tripDetails: TripDataProps }) {
                     />
 
                     <Button onPress={() => stepForm === StepForm.NEW_ACTIVITY ? setShowModal(ActivityModal.NEW_ACTIVITY) : setShowModal(ActivityModal.UPDATE_ACTIVITY)}>
-                        <Button.Title>Confirmar</Button.Title>
+                        <Button.Title>{t('modal.dates.confirm')}</Button.Title>
                     </Button>
                 </View>
             </Modal>

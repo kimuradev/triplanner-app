@@ -1,5 +1,6 @@
 import { FlatList, Text, View } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { Search as SearchIcon } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -10,6 +11,7 @@ import { TripCard } from '@/components/trip-card';
 import { useTripList } from './useTripList';
 
 export default function TripListScreen() {
+    const { t } = useTranslation();
     const {
         data,
         searchDestination,
@@ -23,7 +25,7 @@ export default function TripListScreen() {
                 <Search>
                     <SearchIcon color={colors.zinc[400]} size={20} />
                     <Search.Field
-                        placeholder="Pesquisar por cidade ou país..."
+                        placeholder={t('tripList.search')}
                         onChangeText={handleDestination}
                         value={searchDestination}
                     />
@@ -44,7 +46,7 @@ export default function TripListScreen() {
                         contentContainerClassName="gap-4"
                     />
                 ) : (
-                    <Text className='text-center mt-5 text-purple-900 text-lg'>Nenhum destino encontrado.</Text>
+                    <Text className='text-center mt-5 text-purple-900 text-lg'>{t('tripList.destinationNotFound')}</Text>
                 )}
             </View>
         </SafeAreaView>

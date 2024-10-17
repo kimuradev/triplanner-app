@@ -43,18 +43,6 @@ export type TripDataProps = {
     startsAt?: Date;
     endsAt?: Date;
     isConfirmed?: boolean;
-    activities?: ActivityProps[];
-    createdAt?: Date;
-}
-
-export type TripResponseDataProps = {
-    id?: number;
-    tripId?: number;
-    destination: string;
-    scheduleDate: string;
-    startsAt?: Date;
-    endsAt?: Date;
-    isConfirmed?: boolean;
     activities?: {
         id: number;
         title: string;

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Alert } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { DateData } from 'react-native-calendars';
 
 import { useDatabase } from "@/db/useDatabase"
@@ -9,9 +10,10 @@ import { calendarUtils, DatesSelected } from '@/utils/calendarUtils';
 
 import { TripDetailsModal, TripDataProps } from './constants';
 import { deleteTripById, getTripWithActivitiesById, updateTripById } from '@/services/tripService';
-import { deleteActivitiesById, getActivitiesOutsideOfDateRange} from '@/services/activityService';
+import { deleteActivitiesById, getActivitiesOutsideOfDateRange } from '@/services/activityService';
 
 export function useTripDetails({ tripId }: { tripId: string }) {
+    const { t } = useTranslation()
     const [data, setData] = useState<TripDataProps>({
         destination: '',
         scheduleDate: '',
@@ -46,8 +48,8 @@ export function useTripDetails({ tripId }: { tripId: string }) {
 
             if (!destination || !selectedDates.startsAt || !selectedDates.endsAt) {
                 return Alert.alert(
-                    "Atualizar viagem",
-                    "Lembre-se de, além de preencher o destino, selecione data de início e fim da viagem."
+                    t('trip.details.updateTrip'),
+                    t('trip.details.updateTripMessage')
                 )
             }
 
@@ -63,9 +65,9 @@ export function useTripDetails({ tripId }: { tripId: string }) {
 
             await updateTripById({ db, tripId, destination, selectedDates })
 
-            Alert.alert("Atualizar viagem", "Viagem atualizada com sucesso!", [
+            Alert.alert(t('trip.details.updateTrip'), t('trip.details.updateTripSuccessMessage'), [
                 {
-                    text: "OK",
+                    text: t('trip.ok'),
                     onPress: async () => {
                         setShowModal(TripDetailsModal.NONE)
                         await getTripById({ id: tripId })
@@ -81,13 +83,13 @@ export function useTripDetails({ tripId }: { tripId: string }) {
 
     async function handleRemoveTrip({ id }: { id: number }) {
         try {
-            Alert.alert("Remover viagem", "Tem certeza que deseja remover a viagem", [
+            Alert.alert(t('trip.details.removeTrip'), t('trip.details.removeTripMessage'), [
                 {
-                    text: "Não",
+                    text: t('trip.no'),
                     style: "cancel",
                 },
                 {
-                    text: "Sim",
+                    text: t('trip.yes'),
                     onPress: async () => {
                         await deleteTripById({ db, id })
 

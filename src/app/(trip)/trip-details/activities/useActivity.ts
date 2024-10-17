@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Alert } from "react-native";
 import dayjs from "dayjs";
+import { useTranslation } from "react-i18next";
 
 import { TIME_ZONE } from "@/utils/constants";
 import { useDatabase } from "@/db/useDatabase";
@@ -10,6 +11,7 @@ import { ActivityModal, ActivityProps, StepForm, TripActivitiesProps, TripDataPr
 import { createActivity, deleteActivitiesById, getActivitiesById, updateActivityById, updateActivityDone } from "@/services/activityService";
 
 export function useActivity({ tripDetails }: { tripDetails: TripDataProps }) {
+    const { t } = useTranslation()
     const { db } = useDatabase<typeof tripSchema>({ schema: tripSchema })
 
     const [showModal, setShowModal] = useState(ActivityModal.NONE)
@@ -60,7 +62,7 @@ export function useActivity({ tripDetails }: { tripDetails: TripDataProps }) {
         const trip = await getActivitiesById({ db, id })
 
         if (!trip) {
-            throw new Error('Trip not found.')
+            throw new Error(t('trip.tripNotFound'))
         }
 
         const differenceInDaysBetweenTripStartAndEnd = dayjs(trip.endsAt).diff(
@@ -113,7 +115,7 @@ export function useActivity({ tripDetails }: { tripDetails: TripDataProps }) {
         try {
             const { title, date, hour, obs } = activity
             if (!title || !date || !hour) {
-                return Alert.alert("Cadastrar atividade", "Preencha todos os campos!")
+                return Alert.alert(t('trip.activities.addActivity'), t('trip.activities.fillRequiredFieldsMessage'))
             }
 
             setIsCreatingActivity(true)
@@ -125,7 +127,7 @@ export function useActivity({ tripDetails }: { tripDetails: TripDataProps }) {
                 await createActivity({ db, tripId: tripDetails.id, occursAt, title, obs })
             }
 
-            Alert.alert("Nova Atividade", "Nova atividade cadastrada com sucesso!")
+            Alert.alert(t('trip.activities.newActivity'), t('trip.activities.newActivitySuccessMessage'))
 
             await getTripActivities()
             resetNewActivityFields()
@@ -140,7 +142,7 @@ export function useActivity({ tripDetails }: { tripDetails: TripDataProps }) {
         try {
             const { id, title, date, hour, obs } = activity
             if (!title || !date || !hour) {
-                return Alert.alert("Atualizar atividade", "Preencha todos os campos!")
+                return Alert.alert(t('trip.activities.updateActivity'), t('trip.activities.fillRequiredFieldsMessage'))
             }
 
             setIsCreatingActivity(true)
@@ -153,7 +155,7 @@ export function useActivity({ tripDetails }: { tripDetails: TripDataProps }) {
                 await updateActivityById({ db, id: parseInt(id), occursAt, title, obs })
             }
 
-            Alert.alert("Atualizar Atividade", "Atividade atualizada com sucesso!")
+            Alert.alert(t('trip.activities.updateActivity'), t('trip.activities.updateActivitySuccessMessage'))
 
             await getTripActivities()
             resetNewActivityFields()
@@ -166,13 +168,13 @@ export function useActivity({ tripDetails }: { tripDetails: TripDataProps }) {
 
     async function handleRemoveActivity({ id }: { id: number }) {
         try {
-            Alert.alert("Remover atividade", "Tem certeza que deseja remover a atividade", [
+            Alert.alert(t('trip.activities.removeActivity'), t('trip.activities.removeActivityMessage'), [
                 {
-                    text: "Não",
+                    text: t('trip.no'),
                     style: "cancel",
                 },
                 {
-                    text: "Sim",
+                    text: t('trip.yes'),
                     onPress: async () => {
                         await deleteActivitiesById({ db, id })
 
@@ -188,13 +190,13 @@ export function useActivity({ tripDetails }: { tripDetails: TripDataProps }) {
 
     async function handleLongPressActivity({ id }: { id: string }) {
         try {
-            Alert.alert("Completar atividade", "A atividade já foi concluída?", [
+            Alert.alert(t('trip.activities.activityDone'), t('trip.activities.activityDoneMessage'), [
                 {
-                    text: "Não",
+                    text: t('trip.no'),
                     style: "cancel",
                 },
                 {
-                    text: "Sim",
+                    text: t('trip.yes'),
                     onPress: async () => {
                         await updateActivityDone({ db, id: parseInt(id) })
 

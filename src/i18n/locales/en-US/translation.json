@@ -1,0 +1,85 @@
+{
+    "language": "Language",
+    "tabs": {
+        "nextDestination": "Next Trip",
+        "myTrips": "My Trips"
+    },
+    "home": {
+        "subtitle": "Plan your next trip",
+        "where": "Where to?",
+        "when": "When?",
+        "continue": "Continue",
+        "tripChange": "Change place/date",
+        "confirm": "Confirm trip",
+        "minCharsMessage": "Destination must have at least 4 characteres.",
+        "fillAllRequiredMessage": "Fill all required fields to proceed.",
+        "destinationSuccessMessage": "Destination added successfully!"
+    },
+    "tripList": {
+        "search": "Search by city or country...",
+        "destinationNotFound": "No destination found."
+    },
+    "trip": {
+        "header": "Trip details",
+        "back": "Back",
+        "day": "Day",
+        "yes": "Yes",
+        "no": "No",
+        "ok": "OK",
+        "tripNotFound": "Trip not found.",
+        "activities": {
+            "noActivitiesMessage": "No activities yet.",
+            "addActivity": "Add activity",
+            "fillRequiredFieldsMessage": "Fill all required fields.",
+            "newActivity": "New activity",
+            "newActivitySuccessMessage": "New activity added successfully!",
+            "updateActivity": "Update activity",
+            "updateActivitySuccessMessage": "Activity updated successfully!",
+            "removeActivity": "Remove activity",
+            "removeActivityMessage": "Are you sure you want to remove the activity?",
+            "activityDone": "Activity done",
+            "activityDoneMessage": "Has the activity already been completed?"
+        },
+        "details": {
+            "updateTrip": "Update trip",
+            "updateTripMessage": "Remember, in addition to filling in the destination, select the start and end date of the trip.",
+            "updateTripSuccessMessage": "Trip updated successfully.",
+            "removeTrip": "Remove trip",
+            "removeTripMessage": "Are you sure you want to remove the trip?"
+        }
+    },
+    "modal": {
+        "where": "Where to?",
+        "when": "When?",
+        "tripRemove": "Remove trip",
+        "activityRemove": "Remove activity",
+        "add": {
+            "title": "Add activity",
+            "subtitle": "Activities will be automatically completed after the time.",
+            "whichActivity": "Which activity?",
+            "date": "Date",
+            "time": "Time",
+            "notes": "Notes",
+            "save": "Save activity"
+        },
+        "edit": {
+            "title": "Trip update",
+            "subtitle": "Only who created the trip can edit.",
+            "update": "Update"
+        },
+        "update": {
+            "title": "Update activity",
+            "subtitle": "Activities will be automatically completed after the time.",
+            "whichActivity": "Which activity?",
+            "date": "Date",
+            "time": "Time",
+            "notes": "Notes",
+            "save": "Update activity"
+        },
+        "dates": {
+            "title": "Select dates",
+            "subtitle": "Select the departure and return date of the trip",
+            "confirm": "Confirm"
+        }
+    }
+}

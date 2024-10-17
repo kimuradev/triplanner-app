@@ -1,10 +1,13 @@
 import { Platform } from 'react-native';
 import { Tabs } from 'expo-router';
+import { useTranslation } from "react-i18next";
 import { Plane, TicketsPlane } from 'lucide-react-native'
 
 import { colors } from '@/styles/colors';
 
 export default function TabLayout() {
+    const { t } = useTranslation();
+
     return (
         <Tabs
             screenOptions={{
@@ -21,7 +24,7 @@ export default function TabLayout() {
             <Tabs.Screen
                 name="index"
                 options={{
-                    title: 'Próximo destino',
+                    title: t('tabs.nextDestination'),
                     tabBarIcon: ({ color }) => <Plane size={32} color={colors.purple[900]} />,
                     tabBarItemStyle: {
                         paddingBottom: 8,
@@ -31,7 +34,7 @@ export default function TabLayout() {
             <Tabs.Screen
                 name="trip-list"
                 options={{
-                    title: 'Minhas viagens',
+                    title: t('tabs.myTrips'),
                     tabBarIcon: ({ color }) => <TicketsPlane size={32} color={colors.purple[900]} />,
                     tabBarItemStyle: {
                         paddingBottom: 8

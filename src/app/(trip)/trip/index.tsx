@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { View, Image, Text, Keyboard } from 'react-native';
 import dayjs from 'dayjs';
+import { useTranslation } from "react-i18next";
 import { MapPin, Calendar as IconCalendar, ArrowRight, Settings2, } from 'lucide-react-native';
 
 import { colors } from '@/styles/colors';
@@ -13,8 +14,9 @@ import { TripModal, StepForm } from './constants';
 import { useTrip } from './useTrip';
 
 export default function TripScreen() {
+  const { t } = useTranslation()
   const [showModal, setShowModal] = useState(TripModal.NONE)
-  
+
   const {
     destination,
     isCreatingTrip,
@@ -40,14 +42,14 @@ export default function TripScreen() {
       />
 
       <Text className="text-zinc-400 font-regular text-center text-lg mt-3">
-        Planeje sua próxima viagem
+        {t('home.subtitle')}
       </Text>
 
       <View className="w-full bg-white p-4 rounded-xl my-8 border border-zinc-200 gap-2">
         <Input>
           <MapPin color={destination?.length && stepForm === StepForm.TRIP_DETAILS ? colors.purple[900] : colors.zinc[400]} size={20} />
           <Input.Field
-            placeholder="Para onde?"
+            placeholder={t('home.where')}
             editable={stepForm === StepForm.TRIP_DETAILS}
             onChangeText={handleDestination}
             value={destination}
@@ -57,7 +59,7 @@ export default function TripScreen() {
         <Input>
           <IconCalendar color={selectedDates?.formatDatesInText?.length && stepForm === StepForm.TRIP_DETAILS ? colors.purple[900] : colors.zinc[400]} size={20} />
           <Input.Field
-            placeholder="Quando?"
+            placeholder={t('home.when')}
             editable={stepForm === StepForm.TRIP_DETAILS}
             onFocus={() => Keyboard.dismiss()}
             showSoftInputOnFocus={false}
@@ -74,7 +76,7 @@ export default function TripScreen() {
               variant="secondary"
               onPress={() => setStepForm(StepForm.TRIP_DETAILS)}
             >
-              <Button.Title>Alterar local/data</Button.Title>
+              <Button.Title>{t('home.tripChange')}</Button.Title>
               <Settings2 color={colors.purple[900]} size={20} />
             </Button>
           )}
@@ -82,8 +84,8 @@ export default function TripScreen() {
           <Button onPress={handleNextStepForm} isLoading={isCreatingTrip}>
             <Button.Title>
               {stepForm === StepForm.TRIP_DETAILS
-                ? "Continuar"
-                : "Confirmar Viagem"}
+                ? t('home.continue')
+                : t('home.confirm')}
             </Button.Title>
             <ArrowRight color={colors.white} size={20} />
           </Button>

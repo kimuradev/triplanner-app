@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Alert } from "react-native"
 import { router } from "expo-router"
+import { useTranslation } from "react-i18next"
 import { DateData } from "react-native-calendars"
 
 import { StepForm } from "./constants"
@@ -12,6 +13,7 @@ import { createTrip } from "@/services/tripService"
 
 export function useTrip() {
     const { db } = useDatabase({ schema: tripSchema })
+    const { t } = useTranslation();
 
     const [isCreatingTrip, setIsCreatingTrip] = useState(false)
     const [stepForm, setStepForm] = useState(StepForm.TRIP_DETAILS)
@@ -25,8 +27,8 @@ export function useTrip() {
     const handleNextStepForm = () => {
         if (destination.length < 4) {
             return Alert.alert(
-                "Detalhes da viagem",
-                "O destino deve ter pelo menos 4 caracteres."
+                t('trip.header'),
+                t('home.minCharsMessage')
             )
         }
 
@@ -36,8 +38,8 @@ export function useTrip() {
             !selectedDates.endsAt
         ) {
             return Alert.alert(
-                "Detalhes da viagem",
-                "Preencha todos as informações da viagem para seguir."
+                t('trip.header'),
+                t('home.fillAllRequiredMessage')
             )
         }
 
@@ -64,7 +66,7 @@ export function useTrip() {
         try {
             await createTrip({ db, destination, selectedDates });
 
-            Alert.alert("Destino adicionado com sucesso.")
+            Alert.alert(t('home.destinationSuccessMessage'))
 
             setDestination('')
             setSelectedDates({} as DatesSelected)
